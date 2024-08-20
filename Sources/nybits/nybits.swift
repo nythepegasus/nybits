@@ -24,6 +24,15 @@ public extension Data {
         return withUnsafeBytes { $0.load(as: T.self) }
     }
     
+    func toArray<T>(_ type: T.Type) -> [T] where T: FixedWidthInteger {
+        let range = self.startIndex..<self.endIndex
+        let size = MemoryLayout<T>.size
+        let count = range.count / size
+        return withUnsafeBytes { buffer in
+            Array(UnsafeBufferPointer(start: buffer.baseAddress?.advanced(by: range.lowerBound).assumingMemoryBound(to: T.self), count: count))
+        }
+    }
+    
     var uint8: UInt8 { return to(UInt8.self) }
     var uint8BoolArray: [Bool] { return uint8.asBoolArray }
     
