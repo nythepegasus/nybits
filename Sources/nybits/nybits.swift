@@ -18,3 +18,21 @@ public extension FixedWidthInteger where Self: UnsignedInteger {
         return (0...self.bitWidth - 1).map { self.check($0) }
     }
 }
+
+public extension Data {
+    func to<T>(_ type: T.Type) -> T where T: FixedWidthInteger {
+        return withUnsafeBytes { $0.load(as: T.self) }
+    }
+    
+    var uint8: UInt8 { return to(UInt8.self) }
+    var uint8BoolArray: [Bool] { return uint8.asBoolArray }
+    
+    var uint16: UInt16 { return to(UInt16.self) }
+    var uint16BoolArray: [Bool] { return uint16.asBoolArray }
+    
+    var uint32: UInt32 { return to(UInt32.self) }
+    var uint32BoolArray: [Bool] { return uint32.asBoolArray }
+    
+    var uint64: UInt64 { return to(UInt64.self) }
+    var uint64BoolArray: [Bool] { return uint64.asBoolArray }
+}
