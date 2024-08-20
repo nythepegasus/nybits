@@ -9,11 +9,13 @@ public typealias FWord = UInt32
 public typealias DFWord = UInt64
 
 public extension FixedWidthInteger where Self: UnsignedInteger {
+    @inlinable
     func check(_ bit: Int) -> Bool {
         guard 0...self.bitWidth - 1 ~= bit else { return false }
         return self & (1 << bit) != 0
     }
     
+    @inlinable
     var asBoolArray: [Bool] {
         return (0...self.bitWidth - 1).map { self.check($0) }
     }
@@ -25,6 +27,7 @@ public enum Endian {
 }
 
 public extension Data {
+    @inlinable
     func bit(at index: Int) -> Bool {
         let byteIndex = index / 8
         let bitIndex = index % 8
@@ -32,19 +35,26 @@ public extension Data {
         return self[byteIndex].check(bitIndex)
     }
     
+    @inlinable
     func bits(in range: Range<Int>) -> [Bool] {
         return range.map { bit(at: $0) }
     }
     
+    @inlinable
+    @_specialize(where T == UInt8)
+    @_specialize(where T == UInt16)
+    @_specialize(where T == UInt32)
+    @_specialize(where T == UInt64)
     func to<T>(_ type: T.Type, endian: Endian = .little) -> T where T: FixedWidthInteger {
-        switch endian {
-        case .big:
-            return withUnsafeBytes { $0.load(as: T.self) }.bigEndian
-        case .little:
-            return withUnsafeBytes { $0.load(as: T.self) }.littleEndian
-        }
+        let value = withUnsafeBytes { $0.load(as: T.self) }
+        return endian == .big ? value.bigEndian : value.littleEndian
     }
     
+    @inlinable
+    @_specialize(where T == UInt8)
+    @_specialize(where T == UInt16)
+    @_specialize(where T == UInt32)
+    @_specialize(where T == UInt64)
     func toArray<T>(_ type: T.Type, endian: Endian = .little, in range: Range<Data.Index>? = nil) -> [T] where T: FixedWidthInteger {
         let range = range ?? self.startIndex..<self.endIndex
         let size = MemoryLayout<T>.size
@@ -55,6 +65,11 @@ public extension Data {
         return value.map { endian == .big ? $0.bigEndian : $0.littleEndian }
     }
     
+    @inlinable
+    @_specialize(where T == UInt8)
+    @_specialize(where T == UInt16)
+    @_specialize(where T == UInt32)
+    @_specialize(where T == UInt64)
     func toPaddedArray<T>(_ type: T.Type) -> [T] where T: FixedWidthInteger {
         var paddedData = self
         let size = MemoryLayout<T>.size
@@ -64,32 +79,47 @@ public extension Data {
         return paddedData.toArray(T.self)
     }
     
+    @inlinable
     var uint8: UInt8 { return to(UInt8.self) }
+    @inlinable
     var uint8Array: [UInt8] { return toArray(UInt8.self) }
+    @inlinable
     var uint8BoolArray: [Bool] { return uint8.asBoolArray }
     
+    @inlinable
     var uint16: UInt16 { return to(UInt16.self) }
+    @inlinable
     var uint16Array: [UInt16] { return toArray(UInt16.self) }
+    @inlinable
     var uint16BoolArray: [Bool] { return uint16.asBoolArray }
     
+    @inlinable
     var uint32: UInt32 { return to(UInt32.self) }
+    @inlinable
     var uint32Array: [UInt32] { return toArray(UInt32.self) }
+    @inlinable
     var uint32BoolArray: [Bool] { return uint32.asBoolArray }
     
+    @inlinable
     var uint64: UInt64 { return to(UInt64.self) }
+    @inlinable
     var uint64Array: [UInt64] { return toArray(UInt64.self) }
+    @inlinable
     var uint64BoolArray: [Bool] { return uint64.asBoolArray }
 }
 
 public extension Data {
+    @inlinable
     var hexString: String {
         map { String(format: "%02x", $0) }.joined()
     }
     
+    @inlinable
     var utf8String: String? {
         String(data: self, encoding: .utf8)
     }
     
+    @inlinable
     var utf16String: String? {
         String(data: self, encoding: .utf16)
     }
