@@ -33,10 +33,14 @@ public extension Array where Element: FixedWidthInteger {
         
         let bytes = self.flatMap { value -> [UInt8] in
             let byte = endian == .big ? value.bigEndian : value.littleEndian
-            return (0..<byteWidth).map { index in
-                UInt8((byte >> (8 * (byteWidth - 1 - index))) & 0xff)
+            var bytes: [UInt8] = []
+            for i in 0..<(Element.bitWidth / 8) {
+                let shiftAmount = (Element.bitWidth - 8 * (i + 1))
+                bytes.append(UInt8(byte >> shiftAmount) & 0xFF)
             }
+            return bytes
         }
+
         return String(bytes: bytes, encoding: encoding)
     }
 }
