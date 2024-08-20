@@ -14,7 +14,7 @@ public extension FixedWidthInteger where Self: UnsignedInteger {
         return self & (1 << bit) != 0
     }
     
-    func asBoolArray() -> [Bool] {
+    var asBoolArray: [Bool] {
         return (0...self.bitWidth).map { self.check($0) }
     }
 }
