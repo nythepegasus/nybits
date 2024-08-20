@@ -26,6 +26,21 @@ public enum Endian {
     case big
 }
 
+public extension Array where Element: FixedWidthInteger {
+    @inlinable
+    func toString(endian: Endian = .little, encoding: String.Encoding = .utf8) -> String? {
+        let byteWidth = Element.bitWidth / 8
+        
+        let bytes = self.flatMap { value -> [UInt8] in
+            let byte = endian == .big ? value.bigEndian : value.littleEndian
+            return (0..<byteWidth).map { index in
+                UInt8((byte >> (8 * (byteWidth - 1 - index))) & 0xff)
+            }
+        }
+        return String(bytes: bytes, encoding: encoding)
+    }
+}
+
 public extension Data {
     @inlinable
     func bit(at index: Int) -> Bool {
