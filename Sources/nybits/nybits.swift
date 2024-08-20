@@ -45,6 +45,26 @@ public extension Array where Element: FixedWidthInteger {
     }
 }
 
+public extension Array where Element == UInt32 {
+    
+    @inlinable
+    func toString(endian: Endian = .big) -> String? {
+        // Convert each UInt32 to an array of UInt8, considering the endianness
+        let bytes = self.flatMap { uint32 -> [UInt8] in
+            let value = (endian == .big) ? uint32.bigEndian : uint32.littleEndian
+            return [
+                UInt8((value >> 24) & 0xFF),
+                UInt8((value >> 16) & 0xFF),
+                UInt8((value >> 8) & 0xFF),
+                UInt8(value & 0xFF)
+            ]
+        }
+        
+        // Create a String from the array of UInt8 bytes
+        return String(bytes: bytes, encoding: .utf8)
+    }
+}
+
 public extension Data {
     @inlinable
     func bit(at index: Int) -> Bool {
