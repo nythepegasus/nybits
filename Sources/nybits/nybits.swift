@@ -3,18 +3,18 @@
 
 import Foundation
 
-public extension Data {
-    typealias Byte = UInt8
-    typealias Word = UInt16
-    typealias Dword = UInt32
-    typealias Qword = UInt64
-    
-}
+public typealias Byte = UInt8
+public typealias Word = UInt16
+public typealias FWord = UInt32
+public typealias DFWord = UInt64
 
-public extension UInt8 {
+public extension FixedWidthInteger where Self: UnsignedInteger {
     func check(_ bit: Int) -> Bool {
-        guard 0..<8 ~= bit else { return false }
+        guard 0...self.bitWidth ~= bit else { return false }
         return self & (1 << bit) != 0
     }
+    
+    func asBoolArray() -> [Bool] {
+        return (0...self.bitWidth).map { self.check($0) }
+    }
 }
-
