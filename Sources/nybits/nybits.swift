@@ -13,7 +13,8 @@ public extension Data {
 
 public extension UInt8 {
     func check(_ bit: Int) -> Bool {
-        return (self & (1 << bit)) != 0
+        guard 0..<8 ~= bit else { return false }
+        return self & (1 << bit) != 0
     }
 }
 
