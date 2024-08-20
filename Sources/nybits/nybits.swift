@@ -3,18 +3,13 @@
 
 import Foundation
 
-public typealias Byte = UInt8
-public typealias Word = UInt16
-public typealias FWord = UInt32
-public typealias DFWord = UInt64
-
 public extension FixedWidthInteger where Self: UnsignedInteger {
     @inlinable
     func check(_ bit: Int) -> Bool {
         guard 0...self.bitWidth - 1 ~= bit else { return false }
         return self & (1 << bit) != 0
     }
-    
+
     @inlinable
     var asBoolArray: [Bool] {
         return (0...self.bitWidth - 1).map { self.check($0) }
@@ -26,20 +21,9 @@ public enum Endian {
     case big
 }
 
+// MARK: Generic Data extension
+
 public extension Data {
-    @inlinable
-    func bit(at index: Int) -> Bool {
-        let byteIndex = index / 8
-        let bitIndex = index % 8
-        guard byteIndex < self.count else { return false }
-        return self[byteIndex].check(bitIndex)
-    }
-    
-    @inlinable
-    func bits(in range: Range<Int>) -> [Bool] {
-        return range.map { bit(at: $0) }
-    }
-    
     @inlinable
     @_specialize(where T == UInt8)
     @_specialize(where T == UInt16)
@@ -49,7 +33,7 @@ public extension Data {
         let value = withUnsafeBytes { $0.load(as: T.self) }
         return endian == .big ? value.bigEndian : value.littleEndian
     }
-    
+
     @inlinable
     @_specialize(where T == UInt8)
     @_specialize(where T == UInt16)
@@ -64,7 +48,7 @@ public extension Data {
         }
         return value.map { endian == .big ? $0.bigEndian : $0.littleEndian }
     }
-    
+
     @inlinable
     @_specialize(where T == UInt8)
     @_specialize(where T == UInt16)
@@ -78,28 +62,79 @@ public extension Data {
         }
         return paddedData.toArray(T.self)
     }
-    
+}
+
+// MARK: UInt extensions
+
+public extension Int {
+    typealias IntRange = Range<Int>
+
+    @inlinable
+    func off(_ index: Int) -> IntRange {
+        self..<self+index
+    }
+
+    @inlinable
+    var byte: IntRange { off(1) }
+    @inlinable
+    var word: IntRange { off(2) }
+    @inlinable
+    var fword: IntRange { off(4) }
+    @inlinable
+    var dfword: IntRange { off(8) }
+}
+
+// MARK: Data UInt extension
+
+public extension Data {
+    typealias Byte = UInt8
+    typealias Word = UInt16
+    typealias FWord = UInt32
+    typealias DFWord = UInt64
+
+    @inlinable
+    func byte(_ index: Int) -> Byte { self.subdata(in: index.byte).uint8 }
+    @inlinable
+    func word(_ index: Int) -> Word { self.subdata(in: index.word).uint16 }
+    @inlinable
+    func fword(_ index: Int) -> FWord { self.subdata(in: index.fword).uint32 }
+    @inlinable
+    func dfword(_ index: Int) -> DFWord { self.subdata(in: index.dfword).uint64 }
+
+    @inlinable
+    func bit(at index: Int) -> Bool {
+        let byteIndex = index / 8
+        let bitIndex = index % 8
+        guard byteIndex < self.count else { return false }
+        return self[byteIndex].check(bitIndex)
+    }
+
+    @inlinable
+    func bits(in range: Range<Int>) -> [Bool] {
+        return range.map { bit(at: $0) }
+    }
+
     @inlinable
     var uint8: UInt8 { return to(UInt8.self) }
     @inlinable
     var uint8Array: [UInt8] { return toArray(UInt8.self) }
     @inlinable
     var uint8BoolArray: [Bool] { return uint8.asBoolArray }
-    
+
     @inlinable
     var uint16: UInt16 { return to(UInt16.self) }
     @inlinable
     var uint16Array: [UInt16] { return toArray(UInt16.self) }
     @inlinable
     var uint16BoolArray: [Bool] { return uint16.asBoolArray }
-    
+
     @inlinable
     var uint32: UInt32 { return to(UInt32.self) }
     @inlinable
     var uint32Array: [UInt32] { return toArray(UInt32.self) }
     @inlinable
     var uint32BoolArray: [Bool] { return uint32.asBoolArray }
-    
+
     @inlinable
     var uint64: UInt64 { return to(UInt64.self) }
     @inlinable
@@ -108,17 +143,19 @@ public extension Data {
     var uint64BoolArray: [Bool] { return uint64.asBoolArray }
 }
 
+// MARK: String methods
+
 public extension Data {
     @inlinable
     var hexString: String {
         map { String(format: "%02x", $0) }.joined()
     }
-    
+
     @inlinable
     var utf8String: String? {
         String(data: self, encoding: .utf8)
     }
-    
+
     @inlinable
     var utf16String: String? {
         String(data: self, encoding: .utf16)
