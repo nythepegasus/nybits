@@ -36,7 +36,7 @@ public extension Array where Element: FixedWidthInteger {
             var bytes: [UInt8] = []
             for i in 0..<(Element.bitWidth / 8) {
                 let shiftAmount = (Element.bitWidth - 8 * (i + 1))
-                bytes.append(UInt8(byte >> shiftAmount) & 0xFF)
+                bytes.append(UInt8((byte >> shiftAmount) & 0xFF))
             }
             return bytes
         }
