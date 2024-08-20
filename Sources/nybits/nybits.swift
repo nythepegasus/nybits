@@ -28,7 +28,7 @@ public enum Endian {
 
 public extension Array where Element: FixedWidthInteger {
     @inlinable
-    func toString(endian: Endian = .little, encoding: String.Encoding = .utf8) -> String? {
+    func toString(endian: Endian = .big, encoding: String.Encoding = .utf8) -> String? {
         let byteWidth = Element.bitWidth / 8
         
         let bytes = self.flatMap { value -> [UInt8] in
