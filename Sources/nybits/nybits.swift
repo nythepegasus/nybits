@@ -3,27 +3,14 @@
 
 import Foundation
 
-public extension FixedWidthInteger where Self: UnsignedInteger {
-    @inlinable
-    func check(_ bit: Int) -> Bool {
-        guard 0...self.bitWidth - 1 ~= bit else { return false }
-        return self & (1 << bit) != 0
-    }
-
-    @inlinable
-    var asBoolArray: [Bool] {
-        return (0...self.bitWidth - 1).map { self.check($0) }
-    }
-}
-
-public enum Endian {
-    case little
-    case big
-}
-
 // MARK: Generic Data extension
 
 public extension Data {
+    enum Endian {
+        case little
+        case big
+    }
+
     @inlinable
     @_specialize(where T == UInt8)
     @_specialize(where T == UInt16)
@@ -65,6 +52,19 @@ public extension Data {
 }
 
 // MARK: UInt extensions
+
+public extension FixedWidthInteger where Self: UnsignedInteger {
+    @inlinable
+    func check(_ bit: Int) -> Bool {
+        guard 0...self.bitWidth - 1 ~= bit else { return false }
+        return self & (1 << bit) != 0
+    }
+
+    @inlinable
+    var asBoolArray: [Bool] {
+        return (0...self.bitWidth - 1).map { self.check($0) }
+    }
+}
 
 public extension Int {
     typealias IntRange = Range<Int>
@@ -159,5 +159,11 @@ public extension Data {
     @inlinable
     var utf16String: String? {
         String(data: self, encoding: .utf16)
+    }
+}
+
+public extension String {
+    func data(_ encoding: String.Encoding = .utf8) -> Data {
+        data(using: encoding)!
     }
 }
