@@ -10,11 +10,11 @@ public typealias DFWord = UInt64
 
 public extension FixedWidthInteger where Self: UnsignedInteger {
     func check(_ bit: Int) -> Bool {
-        guard 0...self.bitWidth ~= bit else { return false }
+        guard 0...self.bitWidth - 1 ~= bit else { return false }
         return self & (1 << bit) != 0
     }
     
     var asBoolArray: [Bool] {
-        return (0...self.bitWidth).map { self.check($0) }
+        return (0...self.bitWidth - 1).map { self.check($0) }
     }
 }
