@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Bundle {
+public extension Bundle {
     @inlinable
     var bundleName: String { object(forInfoDictionaryKey: "CFBundleName") as? String ?? "" }
     @inlinable
