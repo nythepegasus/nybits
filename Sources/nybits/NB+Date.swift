@@ -111,7 +111,7 @@ public extension Date {
     }
     
     init(seconds: Int = 0, minutes: Int = 0, hours: Int = 0, days: Int = 0, months: Int = 0, years: Int = 0){
-        self = Date(timeIntervalSince1970: 0).setting(seconds: seconds).setting(minutes: minutes).setting(hours: hours).setting(days: days).setting(months: months).setting(years: years)
+        self = Date(timeIntervalSince1970: 0).adding(seconds: seconds).adding(minutes: minutes).adding(hours: hours).adding(days: days).adding(months: months).adding(years: years)
     }
 
     @inlinable
