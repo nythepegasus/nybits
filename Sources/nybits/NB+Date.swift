@@ -41,33 +41,33 @@ public extension Date {
     var endOfHour: Date { setting(seconds: 59, minutes: 59, hours: 59) }
     
     @inlinable
-    func setting(seconds: Int = 0) -> Date {
-        calendar.date(bySetting: .second, value: seconds, of: self)!
+    func setting(seconds: Int? = nil) -> Date {
+        calendar.date(bySetting: .second, value: seconds ?? self.second, of: self)!
     }
     
     @inlinable
-    func setting(minutes: Int = 0) -> Date {
-        calendar.date(bySetting: .minute, value: minutes, of: self)!
+    func setting(minutes: Int? = nil) -> Date {
+        calendar.date(bySetting: .minute, value: minutes ?? self.minute, of: self)!
     }
     
     @inlinable
-    func setting(hours: Int = 0) -> Date {
-        calendar.date(bySetting: .hour, value: hours, of: self)!
+    func setting(hours: Int? = nil) -> Date {
+        calendar.date(bySetting: .hour, value: hours ?? self.hour, of: self)!
     }
     
     @inlinable
-    func setting(days: Int = 0) -> Date {
-        calendar.date(bySetting: .day, value: days, of: self)!
+    func setting(days: Int? = nil) -> Date {
+        calendar.date(bySetting: .day, value: days ?? self.day, of: self)!
     }
     
     @inlinable
-    func setting(months: Int = 0) -> Date {
-        calendar.date(bySetting: .month, value: months, of: self)!
+    func setting(months: Int? = nil) -> Date {
+        calendar.date(bySetting: .month, value: months ?? self.month, of: self)!
     }
     
     @inlinable
-    func setting(years: Int = 0) -> Date {
-        calendar.date(bySetting: .year, value: years, of: self)!
+    func setting(years: Int? = nil) -> Date {
+        calendar.date(bySetting: .year, value: years ?? self.year, of: self)!
     }
     
     @inlinable
@@ -106,12 +106,12 @@ public extension Date {
     }
     
     @inlinable
-    func setting(seconds: Int = 0, minutes: Int = 0, hours: Int = 0, days: Int = 0, months: Int = 0, years: Int = 0) -> Date {
+    func setting(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil) -> Date {
         self.setting(seconds: seconds).setting(minutes: minutes).setting(hours: hours).setting(days: days).setting(months: months).setting(years: years)
     }
     
     init(seconds: Int = 0, minutes: Int = 0, hours: Int = 0, days: Int = 0, months: Int = 0, years: Int = 0){
-        self = Date(timeIntervalSince1970: 0).adding(seconds: seconds).adding(minutes: minutes).adding(hours: hours).adding(days: days).adding(months: months).adding(years: years - 1970)
+        self = Date(timeIntervalSince1970: 0).adding(seconds: seconds).adding(minutes: minutes).adding(hours: hours).adding(days: days - 1).adding(months: months - 1).adding(years: years - 1970)
     }
 
     @inlinable
