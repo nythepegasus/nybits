@@ -31,4 +31,8 @@ public extension Error? where Self == (any Error)? {
     static func |~> (lhs: Error?, rhs: @escaping (() -> Void)) {
         if lhs.isNil { rhs() }
     }
+    
+    static func |~> (lhs: Error?, rhs: @escaping ((Error) -> Void)) {
+        if !lhs.isNil { rhs(lhs!) }
+    }
 }
