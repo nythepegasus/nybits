@@ -20,20 +20,30 @@ public extension FixedWidthInteger {
     }
 }
 
+infix   operator ~
+prefix  operator ~
+
 public extension Int {
     typealias IntRange = Range<Int>
     
+    @available(*, deprecated, renamed: "~")
     @inlinable
     func off(_ index: Int) -> IntRange {
         self..<self+index
     }
+    
+    @inlinable
+    static func ~ (_ lhs: Int, _ rhs: Int) -> IntRange { lhs..<rhs }
+    
+    @inlinable
+    static prefix func ~ (_ int: Int) -> IntRange { 0..<0+int }
 
     @inlinable
-    var byte: IntRange { off(1) }
+    var byte: IntRange { ~1 }
     @inlinable
-    var word: IntRange { off(2) }
+    var word: IntRange { ~2 }
     @inlinable
-    var fword: IntRange { off(4) }
+    var fword: IntRange { ~4 }
     @inlinable
-    var dfword: IntRange { off(8) }
+    var dfword: IntRange { ~8 }
 }
