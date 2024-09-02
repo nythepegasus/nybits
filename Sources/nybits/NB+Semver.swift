@@ -11,7 +11,7 @@ import Foundation
 
 import Semver
 
-extension Semver {
+public extension Semver {
     func nextPatch(_ versions: Int = 1) -> Semver { Semver(major: self.major, minor: self.minor, patch: self.patch + versions) }
     var nextPatch: Semver {nextPatch() }
     
