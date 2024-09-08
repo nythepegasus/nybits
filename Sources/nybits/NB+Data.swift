@@ -174,7 +174,7 @@ public extension Data {
 
 public extension String {
     init(formatted: String, comment: String? = nil, _ args: CVarArg...) {
-        self.init(format: NSLocalizedString(formatted, comment: comment ?? ""), args)
+        self.init(format: NSLocalizedString(formatted, comment: comment ?? ""), arguments: args)
     }
     
     func data(_ encoding: String.Encoding = .utf8) -> Data { data(using: encoding)! }
