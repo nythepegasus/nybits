@@ -2,6 +2,18 @@
 
 ## Topics
 
+### Data Unsigned Integer Aliases
+- ``nybits/Foundation/Data/uint8``
+- ``nybits/Foundation/Data/uint16``
+- ``nybits/Foundation/Data/uint32``
+- ``nybits/Foundation/Data/uint64``
+
+### Data Signed Integer Aliases
+- ``nybits/Foundation/Data/int8``
+- ``nybits/Foundation/Data/int16``
+- ``nybits/Foundation/Data/int32``
+- ``nybits/Foundation/Data/int64``
+
 ### Unsigned Integer Instance Methods
 - ``nybits/Foundation/Data/byte(_:)``
 - ``nybits/Foundation/Data/word(_:)``
