@@ -34,6 +34,15 @@ extension Bool: Defaultable {
     public static var defaultValue: Bool { false }
 }
 
+public extension Optional {
+    static postfix func ~ (value: Optional) -> Wrapped {
+        guard let value else {
+            fatalError("\(String(describing: value)) does not implement Defaultable")
+        }
+        return value
+    }
+}
+
 public extension Optional where Wrapped: Defaultable {
     static postfix func ~ (value: Optional) -> Wrapped {
         return value ?? Wrapped.defaultValue
