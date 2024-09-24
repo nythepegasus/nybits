@@ -5,6 +5,14 @@
 //  Created by ny on 8/22/24.
 //
 
+extension UInt: Defaultable {
+    public static var defaultValue: UInt { 0 }
+}
+
+extension Int: Defaultable {
+    public static var defaultValue: Int { -1 }
+}
+
 // MARK: - UInt Extensions
 
 public extension FixedWidthInteger {

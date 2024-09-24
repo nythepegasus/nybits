@@ -218,3 +218,7 @@ public extension Date {
     @inlinable
     static var endOfToday: Date { Date().endOfDay }
 }
+
+extension Date: Defaultable {
+    public static var defaultValue: Date { Date() }
+}

@@ -9,15 +9,20 @@ import Foundation
 
 // MARK: - Custom Infix Operators
 
-/// A custom infix operator with `LogicalDisjunctionPrecedence`.
+/// A custom infix operator for chaining success or error handling, using `NilCoalescingPrecedence`.
 ///
 /// This operator is used to handle the case where a `nil` or non-`nil` `Error` can conditionally trigger a closure.
-infix operator |~>: LogicalDisjunctionPrecedence
+infix operator |~>: NilCoalescingPrecedence
+/// Ensure left associativity to ensure predictable chaining.
+precedencegroup NilCoalescingPrecedence {
+    associativity: left
+    higherThan: LogicalDisjunctionPrecedence
+}
 
 /// A custom infix operator with `LogicalDisjunctionPrecedence`.
 ///
 /// This operator is used to execute closures based on whether an `Error` is `nil` or non-`nil`.
-infix operator <~|: LogicalDisjunctionPrecedence
+infix operator <~|: NilCoalescingPrecedence
 
 extension Error {
     // MARK: - Error Logging Function
@@ -109,5 +114,26 @@ public extension Error? where Self == (any Error)? {
     ///   - rhs: The closure to execute, which takes the non-`nil` `Error` as a parameter.
     static func |~> (lhs: Error?, rhs: @escaping ((Error) -> Void)) {
         if !lhs.isNil { rhs(lhs!) }
+    }
+}
+
+public extension Error where Self == (any Error) {
+    @discardableResult
+    static func <~| (lhs: @escaping (() -> Void), rhs: Error) -> Error {
+        lhs()
+        return rhs
+    }
+    
+    @discardableResult
+    static func <~| (lhs: @escaping ((Error) -> Void), rhs: Error) -> Error {
+        lhs(rhs)
+        return rhs
+    }
+    
+    static func |~> (lhs: Error, rhs: @escaping (() -> Void)) {
+        rhs()
+    }
+    static func |~> (lhs: Error, rhs: @escaping ((Error) -> Void)) {
+        rhs(lhs)
     }
 }
