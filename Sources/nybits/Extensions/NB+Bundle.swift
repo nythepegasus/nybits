@@ -5,35 +5,39 @@
 //  Created by ny on 8/22/24.
 //
 
+#if os(iOS) || os(tvOS) || os(macOS)
+
 import Foundation
 
 /// An extension for common `Bundle` accesses
 public extension Bundle {
     /// The CFBundleName or `""`
     @inlinable
-    var bundleName: String { object(forInfoDictionaryKey: "CFBundleName") as? String ?? "" }
+    var bundleName: String { object(forInfoDictionaryKey: "CFBundleName") ~~ "" }
     
     /// The CFBundleShortVersionString or `""`
     @inlinable
-    var bundleVersion: String { object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "" }
+    var bundleVersion: String { object(forInfoDictionaryKey: "CFBundleShortVersionString") ~~ "" }
     
     /// The CFBundleIdentifier or `""`
     @inlinable
-    var bundleIdentifier: String { object(forInfoDictionaryKey: "CFBundleIdentifier") as? String ?? "" }
+    var bundleIdentifier: String { object(forInfoDictionaryKey: "CFBundleIdentifier") ~~ "" }
     
     /// The MinimumOSVersion or `""`
     @inlinable
-    var minimumOSVersion: String { object(forInfoDictionaryKey: "MinimumOSVersion") as? String ?? "" }
+    var minimumOSVersion: String { object(forInfoDictionaryKey: "MinimumOSVersion") ~~ "" }
     
     /// The LSRequiresIPhoneOS or `false`
     @inlinable
-    var requiresiOS: Bool { object(forInfoDictionaryKey: "LSRequiresIPhoneOS") as? Bool ?? false }
+    var requiresiOS: Bool { object(forInfoDictionaryKey: "LSRequiresIPhoneOS") ~~ false }
     
     /// The UIFileSharingEnabled or `false`
     @inlinable
-    var supportsFileSharing: Bool { object(forInfoDictionaryKey: "UIFileSharingEnabled") as? Bool ?? false }
+    var supportsFileSharing: Bool { object(forInfoDictionaryKey: "UIFileSharingEnabled") ~~ false }
     
     /// The UIFileSharingEnabled or `false`
     @inlinable
-    var supportsInPlaceDocuments: Bool { object(forInfoDictionaryKey: "UIFileSharingEnabled") as? Bool ?? false }
+    var supportsInPlaceDocuments: Bool { object(forInfoDictionaryKey: "UIFileSharingEnabled") ~~ false }
 }
+
+#endif

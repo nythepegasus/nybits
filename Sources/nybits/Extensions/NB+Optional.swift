@@ -24,6 +24,7 @@ public extension Optional {
 // MARK: - Default Optional operator
 
 postfix operator ~
+infix operator ~~
 
 public protocol Defaultable {
     static var defaultValue: Self { get }
@@ -36,5 +37,17 @@ extension Bool: Defaultable {
 public extension Optional where Wrapped: Defaultable {
     static postfix func ~ (value: Optional) -> Wrapped {
         return value ?? Wrapped.defaultValue
+    }
+    
+    static func ~~ (lhs: Optional, rhs: Wrapped) -> Wrapped {
+        return lhs ?? rhs
+    }
+    
+    static func ~~ (lhs: Any?, rhs: Wrapped.Type) -> Wrapped {
+        return lhs as? Wrapped ?? rhs.defaultValue
+    }
+    
+    static func ~~ (lhs: Any?, rhs: Wrapped) -> Wrapped {
+        return lhs as? Wrapped ?? rhs
     }
 }
