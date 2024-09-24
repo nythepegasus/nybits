@@ -91,7 +91,7 @@ public extension Foundation.Data {
 
 // MARK: Data Unsigned and Signed Integer Type extensions
 
-public extension Data {
+public extension Foundation.Data {
     
     // MARK: - Typealiases for Unsigned and Signed Integer Types
     
@@ -303,6 +303,8 @@ public extension Data {
     var int64BoolArray: [Bool] { int64.asBoolArray }
 }
 
-extension Data: Defaultable {
+#if !DISABLE_FOUNDATION_DEFAULTABLE
+extension Foundation.Data: Defaultable {
     public static var defaultValue: Data { .init() }
 }
+#endif

@@ -55,6 +55,12 @@ public extension String {
         self.init(format: NSLocalizedString(formatted, comment: comment ?? ""), arguments: args)
     }
     
+    subscript(range: Int.IntRange) -> String {
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start..<end])
+    }
+    
     /// Converts the `String` into a `Data` object using the specified encoding.
     ///
     /// - Parameter encoding: The string encoding to use for the conversion. Defaults to `.utf8`.
@@ -62,8 +68,25 @@ public extension String {
     ///
     /// - Note: The conversion force unwraps the result, so it is important to ensure the string can be converted using the specified encoding.
     func data(_ encoding: String.Encoding = .utf8) -> Data { data(using: encoding)! }
+    
+    func nsRange(from range: Range<String.Index>) -> NSRange { NSRange(range, in: self) }
+
+    var titleCased: String {
+        replacingOccurrences(of: #"[A-Za-z]"#, with: " $0", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .capitalized
+    }
+    
+    var camelCased: String {
+        let words = self.lowercased().split(separator: " ")
+        let firstWord = words.first?.lowercased()
+        let capitalizedWords = words.dropFirst().map { $0.capitalized }
+        return ([firstWord~] + capitalizedWords).joined()
+    }
 }
 
+#if !DISABLE_FOUNDATION_DEFAULTABLE
 extension String: Defaultable {
     public static var defaultValue: String { "" }
 }
+#endif

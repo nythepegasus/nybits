@@ -30,16 +30,24 @@ public protocol Defaultable {
     static var defaultValue: Self { get }
 }
 
-extension Bool: Defaultable {
-    public static var defaultValue: Bool { false }
-}
-
 public extension Optional {
     static postfix func ~ (value: Optional) -> Wrapped {
-        guard let value else {
-            fatalError("\(String(describing: value)) does not implement Defaultable")
-        }
+        guard let value else { preconditionFailure("\(String(describing: value)) does not implement Defaultable") }
         return value
+    }
+    
+    func then(_ closure: (Wrapped) -> Void) {
+        if let value = self { closure(value) }
+    }
+}
+
+extension Optional: Defaultable where Wrapped: Defaultable {
+    public static var defaultValue: Wrapped? { nil }
+}
+
+public extension Optional where Wrapped: Collection {
+    var isEmpty: Bool {
+        return self?.isEmpty ?? false
     }
 }
 
@@ -60,3 +68,45 @@ public extension Optional where Wrapped: Defaultable {
         return lhs as? Wrapped ?? rhs
     }
 }
+
+// MARK: - ny's Defaultable Foundation Extensions
+
+#if !DISABLE_FOUNDATION_DEFAULTABLE
+
+extension Bool: Defaultable {
+    public static var defaultValue: Self { false }
+}
+
+extension Float: Defaultable {
+    public static var defaultValue: Self { 0.0 }
+}
+
+extension Double: Defaultable {
+    public static var defaultValue: Self { 0.0 }
+}
+
+extension CGFloat: Defaultable {
+    public static var defaultValue: Self { 0.0 }
+}
+
+extension Character: Defaultable {
+    public static var defaultValue: Self { " " }
+}
+
+extension Array: Defaultable {
+    public static var defaultValue: Self { [] }
+}
+
+extension Dictionary: Defaultable {
+    public static var defaultValue: Self { [:] }
+}
+
+extension Set: Defaultable {
+    public static var defaultValue: Self { [] }
+}
+
+extension UUID: Defaultable {
+    public static var defaultValue: Self { UUID() }
+}
+
+#endif

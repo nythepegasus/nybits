@@ -5,6 +5,36 @@
 //  Created by ny on 8/22/24.
 //
 
+#if canImport(Foundation)
+import Foundation
+
+public extension Formatter {
+    static let withSeparator: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.groupingSeparator = ","
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
+    static func withSeparator(_ separator: String = ",", _ style: NumberFormatter.Style = .decimal) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.groupingSeparator = separator
+        formatter.numberStyle = style
+        return formatter
+    }
+}
+
+public extension Numeric {
+    var formattedWithSeparator: String { Formatter.withSeparator.string(for: self)~ }
+    
+    func formattedWithSeparator(_ separator: String = ",", _ style: NumberFormatter.Style = .decimal) -> String {
+        Formatter.withSeparator(separator, style).string(for: self)~
+    }
+}
+
+#endif
+
+
 extension UInt: Defaultable {
     public static var defaultValue: UInt { 0 }
 }

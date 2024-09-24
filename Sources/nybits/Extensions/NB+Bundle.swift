@@ -5,7 +5,7 @@
 //  Created by ny on 8/22/24.
 //
 
-#if os(iOS) || os(tvOS) || os(macOS)
+#if os(iOS) || os(tvOS) || os(macOS) && !DISABLE_FOUNDATION_DEFAULTABLE
 
 import Foundation
 
