@@ -2,27 +2,24 @@
 
 import PackageDescription
 
+let nydependencies: [Target.Dependency] = [
+    "nybits",
+    "nydefaults"
+]
+
 let package = Package(
     name: "nybits",
     products: [
         .library(name: "nybits", targets: ["nybits"]),
-        .executable(name: "nytester", targets: ["nytester"]),
+        .library(name: "nydefaults", targets: ["nybits", "nydefaults"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", branch: "main"),
     ],
     targets: [
-        .target(
-            name: "nybits",
-            swiftSettings: [
-                ///.define("DISABLE_FOUNDATION_DEFAULTABLE")
-                /// Define this on your own target to disable ny's default `Defaultable` implementations
-            ]
-        ),
-        .executableTarget(name: "nytester", dependencies: ["nybits"]),
-        .testTarget(
-            name: "nybitsTests",
-            dependencies: ["nybits"]
-        ),
+        .target(name: "nybits"),
+        .target(name: "nydefaults", dependencies: ["nybits"]),
+        .executableTarget(name: "nytester", dependencies: nydependencies),
+        .testTarget(name: "nybitsTests", dependencies: nydependencies),
     ]
 )
