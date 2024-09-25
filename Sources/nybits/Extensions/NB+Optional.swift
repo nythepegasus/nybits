@@ -7,21 +7,7 @@
 
 import Foundation
 
-// MARK: - Optional Extensions
-
-/// Defines a custom postfix operator `~` for handling `Optional` values.
-
-public extension Optional {
-    
-    /// Returns whether the optional value is `nil`.
-    ///
-    /// - Returns: `true` if the value is `nil`, otherwise `false`.
-    var isNil: Bool {
-        return self == nil
-    }
-}
-
-// MARK: - Default Optional operator
+// MARK: - Default Optional operators/extensions
 
 /// Postfix operator `~` used for unwrapping optionals
 postfix operator ~
@@ -29,13 +15,15 @@ postfix operator ~
 /// Infix operator `???` used for providing default values or unwrapping optionals
 infix operator ???
 
-/// Protocol `Defaultable` that provides a static `defaultValue` property
-public protocol Defaultable {
-    static var defaultValue: Self { get }
-}
-
 /// Extension for `Optional` to define utility methods and operators
 public extension Optional {
+    /// Returns whether the optional value is `nil`.
+    ///
+    /// - Returns: `true` if the value is `nil`, otherwise `false`.
+    var isNil: Bool {
+        return self == nil
+    }
+    
     /// Executes a closure if the `Optional` has a value.
     /// - Parameter closure: The closure to execute if the value is not `nil`.
     func then(_ closure: (Wrapped) -> Void) {
@@ -80,6 +68,11 @@ public extension Optional {
     }
 }
 
+/// Protocol `Defaultable` that provides a static `defaultValue` property
+public protocol Defaultable {
+    static var defaultValue: Self { get }
+}
+
 /// Extension for `Optional` where the wrapped type is a collection, providing a property to check if it's empty.
 public extension Optional where Wrapped: Collection {
     /// Checks whether the optional collection is empty.
@@ -108,9 +101,9 @@ public extension Optional where Wrapped: Defaultable {
     }
 }
 
-// MARK: - ny's Defaultable Foundation Extensions
-
 #if !DISABLE_FOUNDATION_DEFAULTABLE
+
+// MARK: - ny's Defaultable Foundation Extensions
 
 extension Bool: Defaultable {
     /// Provides a default value of 'false' for `Bool`
