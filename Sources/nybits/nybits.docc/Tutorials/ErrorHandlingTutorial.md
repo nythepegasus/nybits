@@ -1,6 +1,6 @@
 # Error Handling Examples
 
-#### Error handling example with passed `Error`:
+#### Error handling example with passed Error:
 ```swift
 let e: Error?
 
@@ -11,7 +11,7 @@ let e: Error?
 }
 ```
 
-#### Error handling example without passed `Error`:
+#### Error handling example without passed Error:
 ```swift
 {
     print("Error occurred!")

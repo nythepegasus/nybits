@@ -34,6 +34,29 @@ public extension Numeric {
 
 #endif
 
+public extension CGSize {
+    /// Provides a `CGSize` with `width` `0.0` and `height` `0.0`
+    static let zero = CGSize(width: 0.0, height: 0.0)
+}
+
+public extension CGPoint {
+    /// Provides a `CGPoint` at `x` `0.0` and `y` `0.0`
+    static let zero = CGPoint(x: 0.0, y: 0.0)
+}
+
+#if !DISABLE_FOUNDATION_DEFAULTABLE
+
+// MARK: - Defaultable Conformances
+
+extension CGSize: Defaultable {
+    /// Provides a default value of `.zero` for `CGSize`
+    public static var defaultValue: CGSize { .zero }
+}
+
+extension CGPoint: Defaultable {
+    /// Provides a default value of `.zero` for `CGPoint`
+    public static var defaultValue: CGPoint { .zero }
+}
 
 extension UInt: Defaultable {
     public static var defaultValue: UInt { 0 }
@@ -42,6 +65,8 @@ extension UInt: Defaultable {
 extension Int: Defaultable {
     public static var defaultValue: Int { -1 }
 }
+
+#endif
 
 // MARK: - UInt Extensions
 

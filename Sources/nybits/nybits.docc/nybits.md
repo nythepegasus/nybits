@@ -12,6 +12,7 @@ Overview of stuff
 - <doc:ErrorHandlingTutorial>
 
 ### Essentials
+- ``nybits/Defaultable``
 - ``nybits/Swift/Int``
 - ``nybits/Swift/Optional``
 - ``nybits/Swift/String``
