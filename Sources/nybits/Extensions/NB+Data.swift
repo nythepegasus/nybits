@@ -302,9 +302,3 @@ public extension Foundation.Data {
     @inlinable
     var int64BoolArray: [Bool] { int64.asBoolArray }
 }
-
-#if !DISABLE_FOUNDATION_DEFAULTABLE
-extension Foundation.Data: Defaultable {
-    public static var defaultValue: Data { .init() }
-}
-#endif

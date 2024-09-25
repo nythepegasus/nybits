@@ -44,30 +44,6 @@ public extension CGPoint {
     static let zero = CGPoint(x: 0.0, y: 0.0)
 }
 
-#if !DISABLE_FOUNDATION_DEFAULTABLE
-
-// MARK: - Defaultable Conformances
-
-extension CGSize: Defaultable {
-    /// Provides a default value of `.zero` for `CGSize`
-    public static var defaultValue: CGSize { .zero }
-}
-
-extension CGPoint: Defaultable {
-    /// Provides a default value of `.zero` for `CGPoint`
-    public static var defaultValue: CGPoint { .zero }
-}
-
-extension UInt: Defaultable {
-    public static var defaultValue: UInt { 0 }
-}
-
-extension Int: Defaultable {
-    public static var defaultValue: Int { -1 }
-}
-
-#endif
-
 // MARK: - UInt Extensions
 
 public extension FixedWidthInteger {

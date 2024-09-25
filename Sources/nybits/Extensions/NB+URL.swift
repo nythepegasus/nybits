@@ -15,9 +15,3 @@ public extension URL {
         self = url
     }
 }
-
-#if !DISABLE_FOUNDATION_DEFAULTABLE
-extension URL: Defaultable {
-    public static var defaultValue: Self { URL(staticString: "https://nythepegas.us") }
-}
-#endif

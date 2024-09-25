@@ -110,6 +110,16 @@ extension Bool: Defaultable {
     public static var defaultValue: Bool { false }
 }
 
+extension Int: Defaultable {
+    /// Provides a default value of '-1' for `Int`
+    public static var defaultValue: Int { -1 }
+}
+
+extension UInt: Defaultable {
+    /// Provides a default value of '0' for `UInt`
+    public static var defaultValue: UInt { 0 }
+}
+
 extension Float: Defaultable {
     /// Provides a default value of `0.0` for `Float`
     public static var defaultValue: Float { 0.0 }
@@ -125,9 +135,31 @@ extension CGFloat: Defaultable {
     public static var defaultValue: CGFloat { 0.0 }
 }
 
+extension CGSize: Defaultable {
+    /// Provides a default value of `.zero` for `CGSize`
+    public static var defaultValue: CGSize { .zero }
+}
+
+extension CGPoint: Defaultable {
+    /// Provides a default value of `.zero` for `CGPoint`
+    public static var defaultValue: CGPoint { .zero }
+}
+
+extension Foundation.Data: Defaultable {
+    public static var defaultValue: Foundation.Data { .init() }
+}
+
 extension Character: Defaultable {
     /// Provides a default value of a space character `" "` for `Character`
     public static var defaultValue: Character { " " }
+}
+
+extension String: Defaultable {
+    public static var defaultValue: String { "" }
+}
+
+extension URL: Defaultable {
+    public static var defaultValue: Self { URL(staticString: "https://nythepegas.us") }
 }
 
 extension Array: Defaultable {
@@ -138,6 +170,10 @@ extension Array: Defaultable {
 extension Dictionary: Defaultable {
     /// Provides an empty `Dictionary` as the default value for `Dictionary`
     public static var defaultValue: Dictionary<Key, Value> { [:] }
+}
+
+extension Date: Defaultable {
+    public static var defaultValue: Date { Date() }
 }
 
 extension Set: Defaultable {

@@ -84,9 +84,3 @@ public extension String {
         return ([firstWord~] + capitalizedWords).joined()
     }
 }
-
-#if !DISABLE_FOUNDATION_DEFAULTABLE
-extension String: Defaultable {
-    public static var defaultValue: String { "" }
-}
-#endif
