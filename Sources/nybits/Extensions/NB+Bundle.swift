@@ -15,12 +15,6 @@ public extension Bundle {
     @inlinable
     var bundleName: String { object(forInfoDictionaryKey: "CFBundleName") ??? "" }
     
-    var abundleName: String { object(forInfoDictionaryKey: "CFBundleName") as? String ?? "" }
-
-    var test: Date { object(forInfoDictionaryKey: "test") ??? Date() }
-    
-    var dtest: Date { object(forInfoDictionaryKey: "test") as? Date ?? Date() }
-
     /// The CFBundleShortVersionString or `""`
     @inlinable
     var bundleVersion: String { object(forInfoDictionaryKey: "CFBundleShortVersionString") ??? "" }
