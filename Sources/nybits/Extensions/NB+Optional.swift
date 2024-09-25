@@ -35,7 +35,7 @@ public extension Optional {
     /// - Parameter value: An optional value to be unwrapped.
     /// - Returns: The unwrapped value.
     static postfix func ~ (_ value: Optional) -> Wrapped {
-        guard let value else { preconditionFailure("\(String(describing: value)) does not implement Defaultable") }
+        guard let value else { preconditionFailure("\(String(describing: Wrapped.self)) does not implement Defaultable") }
         return value
     }
 
@@ -63,7 +63,7 @@ public extension Optional {
     ///   - rhs: The type to cast to.
     /// - Returns: The casted value or crashes.
     static func ??? (_ lhs: Any?, _ rhs: Wrapped.Type) -> Wrapped {
-        guard let value = lhs as? Wrapped else { preconditionFailure("\(String(describing: lhs)) does not implement Defaultable") }
+        guard let value = lhs as? Wrapped else { preconditionFailure("\(String(describing: lhs.self)) does not implement Defaultable") }
         return value
     }
 }
