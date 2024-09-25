@@ -36,26 +36,48 @@ public protocol Defaultable {
 
 /// Extension for `Optional` to define utility methods and operators
 public extension Optional {
-    /// Postfix operator implementation for unwrapping `Optional` values.
-    /// If the value is `nil`, it triggers a precondition failure.
-    /// - Parameter value: An optional value to be unwrapped.
-    /// - Returns: The unwrapped value.
-    static postfix func ~ (value: Optional) -> Wrapped {
-        guard let value else { preconditionFailure("\\(String(describing: value)) does not implement Defaultable") }
-        return value
-    }
-
     /// Executes a closure if the `Optional` has a value.
     /// - Parameter closure: The closure to execute if the value is not `nil`.
     func then(_ closure: (Wrapped) -> Void) {
         if let value = self { closure(value) }
     }
-}
+    
+    /// Postfix operator implementation for unwrapping `Optional` values.
+    /// If the value is `nil`, it triggers a precondition failure.
+    /// - Parameter value: An optional value to be unwrapped.
+    /// - Returns: The unwrapped value.
+    static postfix func ~ (_ value: Optional) -> Wrapped {
+        guard let value else { preconditionFailure("\(String(describing: value)) does not implement Defaultable") }
+        return value
+    }
 
-/// Extension to make `Optional` conform to `Defaultable` where the `Wrapped` type conforms to `Defaultable`.
-extension Optional: Defaultable where Wrapped: Defaultable {
-    /// Provides a default value of `nil` for `Optional` types.
-    public static var defaultValue: Wrapped? { nil }
+    /// Infix operator that returns the optional value or a provided fallback.
+    /// - Parameters:
+    ///   - lhs: The Optional value.
+    ///   - rhs: A fallback value to return if `lhs` is `nil`.
+    /// - Returns: The unwrapped value or the fallback.
+    static func ??? (_ lhs: Optional, _ rhs: Wrapped) -> Wrapped {
+        return lhs ?? rhs
+    }
+
+    /// Infix operator for casting `Any?` to the desired type or providing a fallback value.
+    /// - Parameters:
+    ///   - lhs: Any optional value.
+    ///   - rhs: The fallback value to return if `lhs` is `nil`.
+    /// - Returns: The casted value or the fallback.
+    static func ??? (_ lhs: Any?, _ rhs: Wrapped) -> Wrapped {
+        return lhs as? Wrapped ?? rhs
+    }
+    
+    /// Infix operator for casting `Any?` to the desired type or crash process with reason.
+    /// - Parameters:
+    ///   - lhs: Any optional value.
+    ///   - rhs: The type to cast to.
+    /// - Returns: The casted value or crashes.
+    static func ??? (_ lhs: Any?, _ rhs: Wrapped.Type) -> Wrapped {
+        guard let value = lhs as? Wrapped else { preconditionFailure("\(String(describing: lhs)) does not implement Defaultable") }
+        return value
+    }
 }
 
 /// Extension for `Optional` where the wrapped type is a collection, providing a property to check if it's empty.
@@ -72,35 +94,17 @@ public extension Optional where Wrapped: Defaultable {
     /// Postfix operator for unwrapping or returning a default value if `nil`.
     /// - Parameter value: An optional value.
     /// - Returns: The unwrapped value or the type's default value if `nil`.
-    static postfix func ~ (value: Optional) -> Wrapped {
+    static postfix func ~ (_ value: Optional) -> Wrapped {
         return value ?? Wrapped.defaultValue
     }
     
-    /// Infix operator that returns the optional value or a provided fallback.
-    /// - Parameters:
-    ///   - lhs: The Optional value.
-    ///   - rhs: A fallback value to return if `lhs` is `nil`.
-    /// - Returns: The unwrapped value or the fallback.
-    static func ??? (lhs: Optional, rhs: Wrapped) -> Wrapped {
-        return lhs ?? rhs
-    }
-
     /// Infix operator for casting `Any?` to the desired type or providing a default.
     /// - Parameters:
     ///   - lhs: Any optional value.
     ///   - rhs: The type to cast to.
     /// - Returns: The casted value or the type's default value.
-    static func ??? (lhs: Any?, rhs: Wrapped.Type) -> Wrapped {
+    static func ??? (_ lhs: Any?, _ rhs: Wrapped.Type) -> Wrapped {
         return lhs as? Wrapped ?? rhs.defaultValue
-    }
-    
-    /// Infix operator for casting `Any?` to the desired type or providing a fallback value.
-    /// - Parameters:
-    ///   - lhs: Any optional value.
-    ///   - rhs: The fallback value to return if `lhs` is `nil`.
-    /// - Returns: The casted value or the fallback.
-    static func ??? (lhs: Any?, rhs: Wrapped) -> Wrapped {
-        return lhs as? Wrapped ?? rhs
     }
 }
 
