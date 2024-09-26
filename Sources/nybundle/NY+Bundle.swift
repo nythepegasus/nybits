@@ -2,12 +2,15 @@
 //  NB+Bundle.swift
 //  nybits
 //
-//  Created by ny on 8/22/24.
+//  Created by ny on 9/25/24.
 //
 
 #if os(iOS) || os(tvOS) || os(macOS) || os(visionOS) || os(watchOS)
 
+import nybits
+import nydefaults
 import Foundation
+
 
 /// An extension for common `Bundle` accesses
 public extension Bundle {
@@ -113,11 +116,11 @@ public extension Bundle {
         case supportsDocumentsBrowser = "UISupportsDocumentBrowser"
     }
     
-    func object<T>(for key: String) -> T {
+    func object<T>(for key: String) -> T where T: Defaultable {
         object(forInfoDictionaryKey: key) ??? T.self
     }
     
-    func object<T>(for key: Keys) -> T {
+    func object<T>(for key: Keys) -> T where T: Defaultable {
         object<T>(for: key.rawValue)
     }
     
@@ -131,32 +134,33 @@ public extension Bundle {
     
     /// The CFBundleName or `""`
     @inlinable
-    var bundleName: String { object(for: .name) }
+    var name: String { object<String>(for: .name) }
     
     /// The CFBundleShortVersionString or `""`
     @inlinable
-    var bundleVersion: String { object(for: .version) }
+    var version: String { object<String>(for: .version) }
     
     /// The CFBundleIdentifier or `""`
     @inlinable
-    var bundleIdentifier: String { object(for: .identifier) }
+    var identifier: String { object<String>(for: .identifier) }
     
     /// The MinimumOSVersion or `""`
     @inlinable
-    var minimumOSVersion: String { object(for: .minimumOSVersion) }
+    var minimumOSVersion: String { object<String>(for: .minimumOSVersion) }
     
     /// The LSRequiresIPhoneOS or `false`
     @inlinable
-    var requiresiOS: Bool { object(for: .requiresiOS) }
+    var requiresiOS: Bool { object<Bool>(for: .requiresiOS) }
     
     /// The UIFileSharingEnabled or `false`
     @inlinable
-    var supportsFileSharing: Bool { object(for: .supportsFileSharing) }
+    var supportsFileSharing: Bool { object<Bool>(for: .supportsFileSharing) }
     
     /// The UIFileSharingEnabled or `false`
     @inlinable
-    var supportsDocumentsInPlace: Bool { object(for: .supportsDocumentsInPlace) }
+    var supportsDocumentsInPlace: Bool { object<Bool>(for: .supportsDocumentsInPlace) }
     
 }
 
 #endif
+

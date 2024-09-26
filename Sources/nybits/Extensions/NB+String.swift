@@ -81,6 +81,6 @@ public extension String {
         let words = self.lowercased().split(separator: " ")
         let firstWord = words.first?.lowercased()
         let capitalizedWords = words.dropFirst().map { $0.capitalized }
-        return ([firstWord~] + capitalizedWords).joined()
+        return ([firstWord ?? ""] + capitalizedWords).joined()
     }
 }

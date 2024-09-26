@@ -30,6 +30,14 @@ public extension Optional {
         if let value = self { closure(value) }
     }
     
+    #if ENABLE_UNSAFE_DEFAULTABLE_OPTIONAL
+    /**
+     Turns out that for better compile time errors with `Defaultable` these definitions cannot exist
+     However, I personally have found them to be useful for debugging other things,
+     so I'm keeping them behind this compiler flag.
+     
+     Please know that all of this is quite cursed, I wish Swift just had a preprocessor :(
+     */
     /// Postfix operator implementation for unwrapping `Optional` values.
     /// If the value is `nil`, it triggers a precondition failure.
     /// - Parameter value: An optional value to be unwrapped.
@@ -66,6 +74,7 @@ public extension Optional {
         guard let value = lhs as? Wrapped else { preconditionFailure("\(String(describing: lhs.self)) does not implement Defaultable") }
         return value
     }
+    #endif
 }
 
 /// Protocol `Defaultable` that provides a static `defaultValue` property
@@ -78,7 +87,7 @@ public extension Optional where Wrapped: Collection {
     /// Checks whether the optional collection is empty.
     /// - Returns: `true` if the collection is empty or `nil`; otherwise, `false`.
     var isEmpty: Bool {
-        return self?.isEmpty ?? false
+        return self?.isEmpty ?? true
     }
 }
 
@@ -97,6 +106,6 @@ public extension Optional where Wrapped: Defaultable {
     ///   - rhs: The type to cast to.
     /// - Returns: The casted value or the type's default value.
     static func ??? (_ lhs: Any?, _ rhs: Wrapped.Type) -> Wrapped {
-        return lhs as? Wrapped ?? rhs.defaultValue
+        return (lhs as? Wrapped)~
     }
 }

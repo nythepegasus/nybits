@@ -25,10 +25,10 @@ public extension Formatter {
 }
 
 public extension Numeric {
-    var formattedWithSeparator: String { Formatter.withSeparator.string(for: self)~ }
+    var formattedWithSeparator: String { Formatter.withSeparator.string(for: self) ?? "" }
     
     func formattedWithSeparator(_ separator: String = ",", _ style: NumberFormatter.Style = .decimal) -> String {
-        Formatter.withSeparator(separator, style).string(for: self)~
+        Formatter.withSeparator(separator, style).string(for: self) ?? ""
     }
 }
 
