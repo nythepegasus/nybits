@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Debouncer {
+public final class Debouncer {
     private(set) var item: DispatchWorkItem?
     private let interval: TimeInterval
     
