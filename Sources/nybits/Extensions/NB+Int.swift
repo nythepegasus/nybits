@@ -141,3 +141,63 @@ public extension Int {
     @inlinable
     var dfword: IntRange { ~8 }
 }
+
+// MARK: - UInt extensions
+
+public extension UInt64 {
+    var asUInt32Array: [UInt32] {
+        return [
+            UInt32((self >> 32) & 0xFFFFFFFF),
+            UInt32(self & 0xFFFFFFFF)
+        ]
+    }
+    
+    var asUInt16Array: [UInt16] {
+        return [
+            UInt16((self >> 48) & 0xFFFF),
+            UInt16((self >> 32) & 0xFFFF),
+            UInt16((self >> 16) & 0xFFFF),
+            UInt16(self & 0xFFFF)
+        ]
+    }
+    
+    var asUInt8Array: [UInt8] {
+        return [
+            UInt8((self >> 56) & 0xFF),
+            UInt8((self >> 48) & 0xFF),
+            UInt8((self >> 40) & 0xFF),
+            UInt8((self >> 32) & 0xFF),
+            UInt8((self >> 24) & 0xFF),
+            UInt8((self >> 16) & 0xFF),
+            UInt8((self >> 8) & 0xFF),
+            UInt8(self & 0xFF)
+        ]
+    }
+}
+
+public extension UInt32 {
+    var asUInt16Array: [UInt16] {
+        return [
+            UInt16((self >> 16) & 0xFFFF),
+            UInt16(self & 0xFFFF)
+        ]
+    }
+    
+    var asUInt8Array: [UInt8] {
+        return [
+            UInt8((self >> 24) & 0xFF),
+            UInt8((self >> 16) & 0xFF),
+            UInt8((self >> 8) & 0xFF),
+            UInt8(self & 0xFF)
+        ]
+    }
+}
+
+public extension UInt16 {
+    var asUInt8Array: [UInt8] {
+        return [
+            UInt8((self >> 8) & 0xFF),
+            UInt8(self & 0xFF)
+        ]
+    }
+}
