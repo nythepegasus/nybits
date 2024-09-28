@@ -69,6 +69,24 @@ public extension FixedWidthInteger {
     var asBoolArray: [Bool] {
         return (0...self.bitWidth - 1).map { self.bit($0) }
     }
+    
+    
+    func setBit<T>(at index: Int) -> T {
+        guard 0...self.bitWidth - 1 ~= at else { return self }
+        return self | (1 << index)
+    }
+    
+    func clearBit<T>(at index: Int) -> T {
+        guard 0...self.bitWidth - 1 ~= at else { return self }
+        return self & ~(1 << index)
+    }
+    
+    func toggleBit<T>(at index: Int) -> T {
+        guard 0...self.bitWidth - 1 ~= at else { return self }
+        return self ^ (1 << index)
+    }
+    
+    static func fromHex<T>(_ string: String) -> T? { .init(string, radix: 16) }
 }
 
 // MARK: - Custom Infix and Prefix Operators
@@ -145,15 +163,34 @@ public extension Int {
 // MARK: - UInt extensions
 
 public extension UInt64 {
+    init?(_ array: [UInt32], endian: Data.Endian = .little) {
+        guard array.count >= 2 else { return nil }
+        let a = (endian == .big) ? array.reverse() : array
+        self = UInt64(a[0]) << 32 | UInt64(a[1])
+    }
+    
+    init?(_ array: [UInt16], endian: Data.Endian = .little) {
+        guard array.count >= 4 else { return nil }
+        let a = (endian == .big) ? array.reverse() : array
+        self = UInt64(a[0]) << 48 | UInt64(a[1]) << 40 | UInt64(a[2]) << 32 | UInt64(a[3])
+    }
+    
+    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+        guard array.count >= 8 else { return nil }
+        let a: [UInt8] = (endian == .big) ? array.reversed() : array
+        self = UInt64(a[0]) << 56 | UInt64(a[1]) << 48 | UInt64(a[2]) << 40 | UInt64(a[3]) << 32 |
+               UInt64(a[4]) << 24 | UInt64(a[5]) << 16 | UInt64(a[6]) << 8 | UInt64(a[7])
+    }
+    
     var asUInt32Array: [UInt32] {
-        return [
+        [
             UInt32((self >> 32) & 0xFFFFFFFF),
             UInt32(self & 0xFFFFFFFF)
         ]
     }
     
     var asUInt16Array: [UInt16] {
-        return [
+        [
             UInt16((self >> 48) & 0xFFFF),
             UInt16((self >> 32) & 0xFFFF),
             UInt16((self >> 16) & 0xFFFF),
@@ -162,7 +199,7 @@ public extension UInt64 {
     }
     
     var asUInt8Array: [UInt8] {
-        return [
+        [
             UInt8((self >> 56) & 0xFF),
             UInt8((self >> 48) & 0xFF),
             UInt8((self >> 40) & 0xFF),
@@ -173,31 +210,59 @@ public extension UInt64 {
             UInt8(self & 0xFF)
         ]
     }
+    
+    var hex: String { .init(format: "%016llX", self) }
 }
 
 public extension UInt32 {
+    init?(_ array: [UInt16], endian: Data.Endian = .little) {
+        guard array.count >= 2 else { return nil }
+        let a = (endian == .big) ? array.reverse() : array
+        self = (UInt32(a[0]) << 16) | UInt32(a[1])
+    }
+    
+    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+        guard array.count >= 4 else { return nil }
+        let a = (endian == .big) ? array.reverse() : array
+        self = (UInt32(a[0]) << 24) | (UInt32(a[1]) << 16) | (UInt32(a[2]) << 8) | UInt32(a[3])
+    }
+    
     var asUInt16Array: [UInt16] {
-        return [
+        [
             UInt16((self >> 16) & 0xFFFF),
             UInt16(self & 0xFFFF)
         ]
     }
     
     var asUInt8Array: [UInt8] {
-        return [
+        [
             UInt8((self >> 24) & 0xFF),
             UInt8((self >> 16) & 0xFF),
             UInt8((self >> 8) & 0xFF),
             UInt8(self & 0xFF)
         ]
     }
+    
+    var hex: String { .init(format: "%08X", self) }
 }
 
 public extension UInt16 {
+    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+        guard array.count >= 2 else { return nil }
+        let a = (endian == .big) ? array.reverse() : array
+        self = (UInt16(a[0]) << 8) | UInt16(a[1])
+    }
+    
     var asUInt8Array: [UInt8] {
-        return [
+        [
             UInt8((self >> 8) & 0xFF),
             UInt8(self & 0xFF)
         ]
     }
+    
+    var hex: String { .init(format: "%04X", self) }
+}
+
+public extension UInt8 {
+    var hex: String { .init(format: "%02X", self) }
 }
