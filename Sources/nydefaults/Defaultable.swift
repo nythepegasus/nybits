@@ -20,9 +20,49 @@ extension Int: @retroactive Defaultable {
     public static var defaultValue: Int { -1 }
 }
 
+extension Int8: @retroactive Defaultable {
+    /// Provides a default value of '0' for `Int8`
+    public static var defaultValue: Int8 { 0 }
+}
+
+extension Int16: @retroactive Defaultable {
+    /// Provides a default value of '0' for `Int16`
+    public static var defaultValue: Int16 { 0 }
+}
+
+extension Int32: @retroactive Defaultable {
+    /// Provides a default value of '0' for `Int32`
+    public static var defaultValue: Int32 { 0 }
+}
+
+extension Int64: @retroactive Defaultable {
+    /// Provides a default value of '0' for `UInt8`
+    public static var defaultValue: Int64 { 0 }
+}
+
 extension UInt: @retroactive Defaultable {
     /// Provides a default value of '0' for `UInt`
     public static var defaultValue: UInt { 0 }
+}
+
+extension UInt8: @retroactive Defaultable {
+    /// Provides a default value of '0' for `UInt8`
+    public static var defaultValue: UInt8 { 0 }
+}
+
+extension UInt16: @retroactive Defaultable {
+    /// Provides a default value of '0' for `UInt16`
+    public static var defaultValue: UInt16 { 0 }
+}
+
+extension UInt32: @retroactive Defaultable {
+    /// Provides a default value of '0' for `UInt32`
+    public static var defaultValue: UInt32 { 0 }
+}
+
+extension UInt64: @retroactive Defaultable {
+    /// Provides a default value of '0' for `UInt64`
+    public static var defaultValue: UInt64 { 0 }
 }
 
 extension Float: @retroactive Defaultable {

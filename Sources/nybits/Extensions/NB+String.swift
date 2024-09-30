@@ -55,7 +55,7 @@ public extension String {
         self.init(format: NSLocalizedString(formatted, comment: comment ?? ""), arguments: args)
     }
     
-    subscript(range: Int.IntRange) -> String {
+    subscript(range: IntRange) -> String {
         let start = index(startIndex, offsetBy: range.lowerBound)
         let end = index(start, offsetBy: range.upperBound - range.lowerBound)
         return String(self[start..<end])

@@ -70,23 +70,39 @@ public extension FixedWidthInteger {
         return (0...self.bitWidth - 1).map { self.bit($0) }
     }
     
-    
-    func setBit<T>(at index: Int) -> T {
-        guard 0...self.bitWidth - 1 ~= at else { return self }
+    /// Sets the bit at the specified index.
+    /// - Parameter index: The index of the bit to set (0 is the least significant bit).
+    /// - Returns: A copy of the integer with the specified bit set.
+    func setBit(at index: Int) -> Self {
+        guard 0..<self.bitWidth ~= index else { return self }
         return self | (1 << index)
     }
-    
-    func clearBit<T>(at index: Int) -> T {
-        guard 0...self.bitWidth - 1 ~= at else { return self }
+
+    /// Clears the bit at the specified index.
+    /// - Parameter index: The index of the bit to clear (0 is the least significant bit).
+    /// - Returns: A copy of the integer with the specified bit cleared.
+    func clearBit(at index: Int) -> Self {
+        guard 0..<self.bitWidth ~= index else { return self }
         return self & ~(1 << index)
     }
-    
-    func toggleBit<T>(at index: Int) -> T {
-        guard 0...self.bitWidth - 1 ~= at else { return self }
+
+    /// Toggles the bit at the specified index.
+    /// - Parameter index: The index of the bit to toggle (0 is the least significant bit).
+    /// - Returns: A copy of the integer with the specified bit toggled.
+    func toggleBit(at index: Int) -> Self {
+        guard 0..<self.bitWidth ~= index else { return self }
         return self ^ (1 << index)
     }
+
+    /// Creates an instance of a `FixedWidthInteger` from a hexadecimal string.
+    /// - Parameter string: The hexadecimal string to convert.
+    /// - Returns: An optional integer of the same type, or `nil` if the conversion fails.
+    static func fromHex(_ string: String) -> Self? {
+        return Self(string, radix: 16)
+    }
     
-    static func fromHex<T>(_ string: String) -> T? { .init(string, radix: 16) }
+    /// Returns the hexadecimal string representation of the integer.
+    var hex: String { .init(format: "0x%0\(self.bitWidth / 4)X", UInt64(self)) }
 }
 
 // MARK: - Custom Infix and Prefix Operators
@@ -97,10 +113,10 @@ infix operator ~ : RangeFormationPrecedence
 /// Defines a custom prefix operator `~` for creating a range starting from zero and ending at the specified integer.
 prefix operator ~
 
+/// A typealias for a range of integers.
+public typealias IntRange = Range<Int>
+
 public extension Int {
-    
-    /// A typealias for a range of integers.
-    typealias IntRange = Range<Int>
     
     /// Deprecated method to create a range from `self` to `self + index`.
     ///
@@ -163,19 +179,19 @@ public extension Int {
 // MARK: - UInt extensions
 
 public extension UInt64 {
-    init?(_ array: [UInt32], endian: Data.Endian = .little) {
+    init?(_ array: [UInt32], endian: Endian = .little) {
         guard array.count >= 2 else { return nil }
-        let a = (endian == .big) ? array.reverse() : array
+        let a = (endian == .big) ? array.reversed() : array
         self = UInt64(a[0]) << 32 | UInt64(a[1])
     }
     
-    init?(_ array: [UInt16], endian: Data.Endian = .little) {
+    init?(_ array: [UInt16], endian: Endian = .little) {
         guard array.count >= 4 else { return nil }
-        let a = (endian == .big) ? array.reverse() : array
+        let a = (endian == .big) ? array.reversed() : array
         self = UInt64(a[0]) << 48 | UInt64(a[1]) << 40 | UInt64(a[2]) << 32 | UInt64(a[3])
     }
     
-    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+    init?(_ array: [UInt8], endian: Endian = .little) {
         guard array.count >= 8 else { return nil }
         let a: [UInt8] = (endian == .big) ? array.reversed() : array
         self = UInt64(a[0]) << 56 | UInt64(a[1]) << 48 | UInt64(a[2]) << 40 | UInt64(a[3]) << 32 |
@@ -211,19 +227,19 @@ public extension UInt64 {
         ]
     }
     
-    var hex: String { .init(format: "%016llX", self) }
+    var int64: Int64 { Int64(bitPattern: self) }
 }
 
 public extension UInt32 {
-    init?(_ array: [UInt16], endian: Data.Endian = .little) {
+    init?(_ array: [UInt16], endian: Endian = .little) {
         guard array.count >= 2 else { return nil }
-        let a = (endian == .big) ? array.reverse() : array
+        let a = (endian == .big) ? array.reversed() : array
         self = (UInt32(a[0]) << 16) | UInt32(a[1])
     }
     
-    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+    init?(_ array: [UInt8], endian: Endian = .little) {
         guard array.count >= 4 else { return nil }
-        let a = (endian == .big) ? array.reverse() : array
+        let a = (endian == .big) ? array.reversed() : array
         self = (UInt32(a[0]) << 24) | (UInt32(a[1]) << 16) | (UInt32(a[2]) << 8) | UInt32(a[3])
     }
     
@@ -243,13 +259,13 @@ public extension UInt32 {
         ]
     }
     
-    var hex: String { .init(format: "%08X", self) }
+    var int32: Int32 { Int32(bitPattern: self) }
 }
 
 public extension UInt16 {
-    init?(_ array: [UInt8], endian: Data.Endian = .little) {
+    init?(_ array: [UInt8], endian: Endian = .little) {
         guard array.count >= 2 else { return nil }
-        let a = (endian == .big) ? array.reverse() : array
+        let a = (endian == .big) ? array.reversed() : array
         self = (UInt16(a[0]) << 8) | UInt16(a[1])
     }
     
@@ -260,9 +276,9 @@ public extension UInt16 {
         ]
     }
     
-    var hex: String { .init(format: "%04X", self) }
+    var int16: Int16 { Int16(bitPattern: self) }
 }
 
 public extension UInt8 {
-    var hex: String { .init(format: "%02X", self) }
+    var int8: Int8 { Int8(bitPattern: self) }
 }
