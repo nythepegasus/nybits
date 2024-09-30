@@ -9,19 +9,19 @@ The `Defaultable` protocol is particularly useful when working with optionals an
 Type                                     | Default                                      |
 ---------------------------------------- | -------------------------------------------- |
 ``nybits/Swift/Array``~                  | `[]`                                         |
-``nybits/Swift/Set``~                    | `[]`                                         |
-``nybits/Swift/Dictionary``~             | `[:]`                                        |
-``nybits/Swift/Bool``~                   | `false`                                      |
+``Swift/Set``~                           | `[]`                                         |
+``Swift/Dictionary``~                    | `[:]`                                        |
+``Swift/Bool``~                          | `false`                                      |
 ``nybits/Swift/Int``~                    | `-1`                                         |
-``nybits/Swift/UInt``~                   | `0`                                          |
-``nybits/Swift/Float``~                  | `0.0`                                        |
-``nybits/Swift/Double``~                 | `0.0`                                        |
-``nybits/CoreFoundation/CGFloat``~       | `0.0`                                        |
+``Swift/UInt``~                          | `0`                                          |
+``Swift/Float``~                         | `0.0`                                        |
+``Swift/Double``~                        | `0.0`                                        |
+``CoreFoundation/CGFloat``~              | `0.0`                                        |
 ``nybits/CoreFoundation/CGPoint``~       | `CGPoint(x: 0.0, y: 0.0)`                    |
 ``nybits/CoreFoundation/CGSize``~        | `CGSize(width: 0.0, height: 0.0)`            |
 ``nybits/Swift/String``~                 | `""`                                         |
-``nybits/Swift/Character``~              | `" "`                                        |
+``Swift/Character``~                     | `" "`                                        |
 ``nybits/Foundation/URL``~               | `URL(staticString: "https://nythepegas.us")` |
 ``nybits/Foundation/Data``~              | `Data()`                                     |
 ``nybits/Foundation/Date``~              | `Date()`                                     |
-``nybits/Foundation/UUID``~              | `UUID()`                                     |
+``Foundation/UUID``~                     | `UUID()`                                     |
