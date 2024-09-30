@@ -6,6 +6,7 @@
 //
 
 import nybits
+import nydefaults
 import Foundation
 
 if CommandLine.arguments.count == 2 {
