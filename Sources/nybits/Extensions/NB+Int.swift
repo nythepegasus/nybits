@@ -105,7 +105,7 @@ public extension FixedWidthInteger {
     var hex: String { .init(format: "0x%0\(self.bitWidth / 4)X", UInt64(self)) }
 }
 
-extension FixedWidthInteger {
+public extension FixedWidthInteger {
     func addWithoutOverflow(_ other: Self) -> Self {
         let o = addingReportingOverflow(other)
         return o.overflow ? .max : o.partialValue
