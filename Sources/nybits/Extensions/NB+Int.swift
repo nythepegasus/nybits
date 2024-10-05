@@ -105,6 +105,18 @@ public extension FixedWidthInteger {
     var hex: String { .init(format: "0x%0\(self.bitWidth / 4)X", UInt64(self)) }
 }
 
+extension FixedWidthInteger {
+    func addWithoutOverflow(_ other: Self) -> Self {
+        let o = addingReportingOverflow(other)
+        return o.overflow ? .max : o.partialValue
+    }
+    
+    func subtractWithoutOverflow(_ other: Self) -> Self {
+        let o = subtractingReportingOverflow(other)
+        return o.overflow ? .min : o.partialValue
+    }
+}
+
 // MARK: - Custom Infix and Prefix Operators
 
 /// Defines a custom infix operator `~` for range creation between two integers.
