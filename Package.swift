@@ -2,34 +2,43 @@
 
 import PackageDescription
 
-let nydependencies: [Target.Dependency] = ["nybits", "nydefaults"]
+let baseDep: [Target.Dependency] = ["nybits"]
+let bundleDep: [Target.Dependency] = baseDep + ["nydefaults"]
+let suiDep: [Target.Dependency] = baseDep + ["nybundle"]
+let allDep: [Target.Dependency] = suiDep + ["nysuibits"]
 
 #if true
 let nybits: Target = .target(name: "nybits")
-let nydefaults: Target = .target(name: "nydefaults", dependencies: ["nybits"])
-let nybundle: Target = .target(name: "nybundle", dependencies: nydependencies)
-let nytester: Target = .executableTarget(name: "nytester", dependencies: nydependencies)
+let nydefaults: Target = .target(name: "nydefaults", dependencies: baseDep)
+let nybundle: Target = .target(name: "nybundle", dependencies: bundleDep)
+let nysuibits: Target = .target(name: "nysuibits", dependencies: suiDep)
+let nytester: Target = .executableTarget(name: "nytester", dependencies: allDep)
 #else
 let unsafeSettings: [SwiftSetting] = [.define("ENABLE_UNSAFE_DEFAULTABLE_OPTIONAL")]
 
 let nybits: Target = .target(name: "nybits", swiftSettings: unsafeSettings)
-let nydefaults: Target = .target(name: "nydefaults", dependencies: ["nybits"], swiftSettings: unsafeSettings)
-let nybundle: Target = .target(name: "nybundle", dependencies: nydependencies, swiftSettings: unsafeSettings)
-let nytester: Target = .executableTarget(name: "nytester", dependencies: nydependencies, swiftSettings: unsafeSettings)
+let nydefaults: Target = .target(name: "nydefaults", dependencies: baseDep, swiftSettings: unsafeSettings)
+let nybundle: Target = .target(name: "nybundle", dependencies: bundleDep, swiftSettings: unsafeSettings)
+let nysuibits: Target = .target(name: "nysuibits", dependencies: suiDep, swiftSettings: unsafeSettings)
+let nytester: Target = .executableTarget(name: "nytester", dependencies: allDep, swiftSettings: unsafeSettings)
 #endif
 
-let nytests: Target = .testTarget(name: "nybitsTests", dependencies: nydependencies)
+let nytests: Target = .testTarget(name: "nytests", dependencies: allDep)
 
-let targets: [Target] = [nybits, nydefaults, nytester, nybundle, nytests]
+let base: [Target] = [nybits, nydefaults]
+let bundle: [Target] = base + [nybundle]
+let all: [Target] = bundle + [nytester, nysuibits, nytests]
 
 let products: [Product] = [
     .library(name: "nybits", targets: ["nybits"]),
-    .library(name: "nydefaults", targets: ["nybits", "nydefaults"]),
-    .library(name: "nybundle", targets: ["nybits", "nydefaults", "nybundle"]),
+    .library(name: "nydefaults", targets: base.map(\.name)),
+    .library(name: "nybundle", targets: bundle.map(\.name)),
+    .library(name: "nysuibits", targets: bundle.map(\.name)),
+    .executable(name: "nytester", targets: ["nytester"])
 ]
 
 let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/apple/swift-docc-plugin", branch: "main"),
 ]
 
-let package = Package(name: "nybits", products: products, dependencies: dependencies, targets: targets)
+let package = Package(name: "nybits", products: products, dependencies: dependencies, targets: all)
