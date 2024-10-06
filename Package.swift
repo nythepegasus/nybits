@@ -27,13 +27,14 @@ let nytests: Target = .testTarget(name: "nytests", dependencies: allDep)
 
 let base: [Target] = [nybits, nydefaults]
 let bundle: [Target] = base + [nybundle]
+let sui: [Target] = base + [nysuibits]
 let all: [Target] = bundle + [nytester, nysuibits, nytests]
 
 let products: [Product] = [
     .library(name: "nybits", targets: ["nybits"]),
     .library(name: "nydefaults", targets: base.map(\.name)),
     .library(name: "nybundle", targets: bundle.map(\.name)),
-    .library(name: "nysuibits", targets: bundle.map(\.name)),
+    .library(name: "nysuibits", targets: sui.map(\.name)),
     .executable(name: "nytester", targets: ["nytester"])
 ]
 
