@@ -19,100 +19,72 @@ public extension Bundle {
         
         // MARK: - Categorization
         
-        @available(macOS 10.0, *)
         case appCategoryType = "LSApplicationCategoryType"
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case packageType = "CFBundlePackageType"
         
         // MARK: - Identification
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case identifier = "CFBundleIdentifier"
         
-        @available(watchOS 2.0, *)
         case wkidentifier = "WKAppBundleIdentifier"
         
-        @available(watchOS 2.0, *)
         case wkCompanionIdentifier = "WKCompanionAppBundleIdentifier"
         
         // MARK: - Naming
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case name = "CFBundleName"
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case displayName = "CFBundleDisplayName"
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case spokenName = "CFBundleSpokenName"
         
         // MARK: - Bundle version
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case version = "CFBundleVersion"
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case shortVersion = "CFBundleShortVersionString"
         
-        @available(iOS 2.0, macOS 10.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case infoVersion = "CFBundleInfoDictionaryVersion"
         
-        @available(macOS 10.0, *)
         case copyright = "NSHumanReadableCopyright"
         
         // MARK: - Operating System version
         
-        @available(macCatalyst 13.0, macOS 10.0, *)
         case minimumMacOSVersion = "LSMinimumSystemVersion"
         
-        @available(macCatalyst 13.0, macOS 10.0, *)
         case minimumMacOSVersionByArchitecture = "LSMinimumSystemVersionByArchitecture"
         
-        @available(iOS 3.0, tvOS 9.0, visionOS 1.0, *)
         case minimumOSVersion = "MinimumOSVersion"
     
-        @available(iOS 12.0, *)
         case requiresiOS = "LSRequiresIPhoneOS"
         
-        @available(watchOS 2.0, *)
         case watchKitApp = "WKWatchKitApp"
         
-        @available(watchOS 6.0, *)
         case watchKitAppIndependent = "WKRunsIndependentlyOfCompanionApp"
         
-        @available(watchOS 6.0, *)
         case watchKitAppOnly = "WKWatchOnly"
 
-        @available(watchOS 2.0, *)
         case watchKitDelegate = "WKExtensionDelegateClassName"
         
-        @available(watchOS 7.0, *)
         case newWK = "WKApplication"
         
-        @available(iOS 3.0, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case requiredDeviceCapabilities = "UIRequiredDeviceCapabilities"
         
-        @available(macOS 10.0, *)
         case multipleInstancesProhibited = "LSMultipleInstancesProhibited"
         
-        @available(iOS 4.0, visionOS 1.0, watchOS 4.0, *)
         case backgroundModes = "UIBackgroundModes"
         
         case requiresMacCatalyst = "LSRequiresMacCatalyst"
         
         case requirestvOS = "LSRequiresTVOS"
         
-        @available(iOS 2.0, visionOS 1.0, *)
         case requiresPersistentWiFi = "UIRequiresPersistentWiFi"
         
-        @available(iOS 3.2, tvOS 9.0, visionOS 1.0, watchOS 2.0, *)
         case supportsFileSharing = "UIFileSharingEnabled"
         
-        @available(iOS 12.0, visionOS 1.0, *)
         case supportsDocumentsInPlace = "LSSupportsOpeningDocumentsInPlace"
         
-        @available(iOS 11.0, tvOS 11.0, visionOS 1.0, *)
         case supportsDocumentsBrowser = "UISupportsDocumentBrowser"
     }
     
@@ -132,35 +104,66 @@ public extension Bundle {
         keyExists(key.rawValue)
     }
     
-    /// The CFBundleName or `""`
-    @inlinable
-    var name: String { object<String>(for: .name) }
+    // MARK: - Var accesses for each key
+    var appCategoryType: String { object<String>(for: .appCategoryType) }
     
-    /// The CFBundleShortVersionString or `""`
-    @inlinable
-    var version: String { object<String>(for: .version) }
+    var packageType: String { object<String>(for: .packageType) }
     
-    /// The CFBundleIdentifier or `""`
-    @inlinable
     var identifier: String { object<String>(for: .identifier) }
     
-    /// The MinimumOSVersion or `""`
-    @inlinable
+    var wkIdentifier: String { object<String>(for: .wkidentifier) }
+    
+    var wkCompanionIdentifier: String { object<String>(for: .wkCompanionIdentifier) }
+    
+    var name: String { object<String>(for: .name) }
+    
+    var displayName: String { object<String>(for: .displayName) }
+    
+    var spokenName: String { object<String>(for: .spokenName) }
+    
+    var version: String { object<String>(for: .version) }
+    
+    var shortVersion: String { object<String>(for: .shortVersion) }
+    
+    var infoVersion: String { object<String>(for: .infoVersion) }
+    
+    var copyright: String { object<String>(for: .copyright) }
+    
+    var minimumMacOSVersion: String { object<String>(for: .minimumMacOSVersion) }
+    
+    var minimumMacOSVersionByArchitecture: String { object<String>(for: .minimumMacOSVersionByArchitecture) }
+    
     var minimumOSVersion: String { object<String>(for: .minimumOSVersion) }
     
-    /// The LSRequiresIPhoneOS or `false`
-    @inlinable
     var requiresiOS: Bool { object<Bool>(for: .requiresiOS) }
     
-    /// The UIFileSharingEnabled or `false`
-    @inlinable
+    var watchKitApp: Bool { object<Bool>(for: .watchKitApp) }
+    
+    var watchKitAppIndependent: Bool { object<Bool>(for: .watchKitAppIndependent) }
+    
+    var watchKitAppOnly: Bool { object<Bool>(for: .watchKitAppOnly) }
+    
+    var watchKitDelegate: String { object<String>(for: .watchKitDelegate) }
+    
+    var newWK: String { object<String>(for: .newWK) }
+    
+    var requiredDeviceCapabilities: [String] { object<[String]>(for: .requiredDeviceCapabilities) }
+    
+    var multipleInstancesProhibited: Bool { object<Bool>(for: .multipleInstancesProhibited) }
+    
+    var backgroundModes: [String] { object<[String]>(for: .backgroundModes) }
+    
+    var requiresMacCatalyst: Bool { object<Bool>(for: .requiresMacCatalyst) }
+    
+    var requirestvOS: Bool { object<Bool>(for: .requirestvOS) }
+    
+    var requiresPersistentWiFi: Bool { object<Bool>(for: .requiresPersistentWiFi) }
+    
     var supportsFileSharing: Bool { object<Bool>(for: .supportsFileSharing) }
     
-    /// The UIFileSharingEnabled or `false`
-    @inlinable
     var supportsDocumentsInPlace: Bool { object<Bool>(for: .supportsDocumentsInPlace) }
     
+    var supportsDocumentsBrowser: Bool { object<Bool>(for: .supportsDocumentsBrowser) }
 }
 
 #endif
-
