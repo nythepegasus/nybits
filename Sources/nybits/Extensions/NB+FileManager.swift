@@ -24,7 +24,7 @@ public extension FileManager {
         self.default.container(group)
     }
     
-    func container(_ group: some AppGroupID) -> URL? {
+    func container<T: AppGroupID>(_ group: T) -> URL? {
         containerURL(forSecurityApplicationGroupIdentifier: group.identifier)
     }
 }
