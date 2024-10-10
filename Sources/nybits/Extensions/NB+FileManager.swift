@@ -5,21 +5,21 @@
 //  Created by ny on 10/10/24.
 //
 
-#if os(iOS)
-
 import Foundation
 
 public protocol AppGroupID {
     var identifier: String { get }
 }
 
+public extension AppGroupID {
+    var container: URL? { FileManager.container(self) }
+}
+
+public extension AppGroupID where Self: RawRepresentable, Self.RawValue == String {
+    var identifier: String { rawValue }
+}
+
 public extension FileManager {
-    enum NYAppGroup: String, CaseIterable, AppGroupID {
-        case ny = "group.ny.apps"
-        
-        public var identifier: String { rawValue }
-    }
-    
     static func container(_ group: some AppGroupID) -> URL? {
         self.default.container(group)
     }
@@ -28,5 +28,3 @@ public extension FileManager {
         containerURL(forSecurityApplicationGroupIdentifier: group.identifier)
     }
 }
-
-#endif
