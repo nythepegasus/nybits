@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol AppGroupID {
-    var identifier: String { get }
+    var name: String { get }
 }
 
 public extension AppGroupID {
@@ -16,7 +16,7 @@ public extension AppGroupID {
 }
 
 public extension AppGroupID where Self: RawRepresentable, Self.RawValue == String {
-    var identifier: String { rawValue }
+    var name: String { rawValue }
 }
 
 public extension FileManager {
@@ -25,6 +25,6 @@ public extension FileManager {
     }
     
     func container<T: AppGroupID>(_ group: T) -> URL? {
-        containerURL(forSecurityApplicationGroupIdentifier: group.identifier)
+        containerURL(forSecurityApplicationGroupIdentifier: group.name)
     }
 }
