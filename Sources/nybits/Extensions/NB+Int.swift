@@ -155,7 +155,7 @@ public extension Int {
     ///   - rhs: The upper bound of the range.
     /// - Returns: A range from `lhs` to `rhs`.
     @inlinable
-    static func ~ (_ lhs: Int, _ rhs: Int) -> IntRange { lhs..<rhs }
+    static func ~ (_ lhs: Int, _ rhs: Int) -> IntRange { lhs..<lhs+rhs }
     
     /// Custom prefix operator `~` to create a range starting from `0` and extending to the specified integer.
     ///
