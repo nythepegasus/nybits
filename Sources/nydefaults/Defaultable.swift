@@ -80,6 +80,10 @@ extension CGFloat: Defaultable {
     public static var defaultValue: CGFloat { 0.0 }
 }
 
+#if canImport(CoreGraphics)
+
+import CoreGraphics
+
 extension CGSize: Defaultable {
     /// Provides a default value of `.zero` for `CGSize`
     public static var defaultValue: CGSize { .zero }
@@ -89,6 +93,22 @@ extension CGPoint: Defaultable {
     /// Provides a default value of `.zero` for `CGPoint`
     public static var defaultValue: CGPoint { .zero }
 }
+
+#else
+
+extension CGSize: Defaultable {
+    static let zero = CGSize(width: 0, height: 0)
+    /// Provides a default value of `.zero` for `CGSize`
+    public static var defaultValue: CGSize { .zero }
+}
+
+extension CGPoint: Defaultable {
+    static let zero = CGPoint(x: 0, y: 0)
+    /// Provides a default value of `.zero` for `CGPoint`
+    public static var defaultValue: CGPoint { .zero }
+}
+
+#endif
 
 extension Foundation.Data: Defaultable {
     public static var defaultValue: Foundation.Data { .init() }
