@@ -34,16 +34,6 @@ public extension Numeric {
 
 #endif
 
-public extension CGSize {
-    /// Provides a `CGSize` with `width` `0.0` and `height` `0.0`
-    static let zero = CGSize(width: 0.0, height: 0.0)
-}
-
-public extension CGPoint {
-    /// Provides a `CGPoint` at `x` `0.0` and `y` `0.0`
-    static let zero = CGPoint(x: 0.0, y: 0.0)
-}
-
 public extension Comparable {
     func clamped(_ f: Self, _ t: Self) -> Self { min(max(self, f), t) }
 }

@@ -5,6 +5,8 @@
 //  Created by ny on 10/10/24.
 //
 
+#if canImport(UIKit) || canImport(SwiftUI)
+
 import Foundation
 
 public protocol AppGroupID {
@@ -28,3 +30,5 @@ public extension FileManager {
         containerURL(forSecurityApplicationGroupIdentifier: group.name)
     }
 }
+#endif
+

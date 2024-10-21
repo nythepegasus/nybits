@@ -5,6 +5,7 @@
 //  Created by ny on 9/24/24.
 //
 
+#if canImport(Foundation) && canImport(UIKit)
 import Foundation
 
 public extension NSObject {
@@ -22,3 +23,5 @@ public extension NSObject {
         return self
     }
 }
+#endif
+
