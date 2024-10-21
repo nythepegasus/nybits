@@ -44,6 +44,10 @@ public extension CGPoint {
     static let zero = CGPoint(x: 0.0, y: 0.0)
 }
 
+public extension Comparable {
+    func clamped(_ f: Self, _ t: Self) -> Self { min(max(self, f), t) }
+}
+
 // MARK: - UInt Extensions
 
 public extension FixedWidthInteger {
@@ -125,6 +129,21 @@ public extension FixedWidthInteger {
     }
 }
 
+public extension FixedWidthInteger {
+  init<I>(littleEndianBytes iterator: inout I)
+  where I: IteratorProtocol, I.Element == UInt8 {
+    self = stride(from: 0, to: Self.bitWidth, by: 8).reduce(into: 0) {
+      $0 |= Self(truncatingIfNeeded: iterator.next()!) &<< $1
+    }
+  }
+  
+  init<C>(littleEndianBytes bytes: C) where C: Collection, C.Element == UInt8 {
+    precondition(bytes.count == (Self.bitWidth+7)/8)
+    var iter = bytes.makeIterator()
+    self.init(littleEndianBytes: &iter)
+  }
+}
+
 // MARK: - Custom Infix and Prefix Operators
 
 /// Defines a custom infix operator `~` for range creation between two integers.
@@ -142,11 +161,8 @@ public extension Int {
     ///
     /// - Parameter index: The upper bound offset for the range.
     /// - Returns: A range starting from `self` and extending by `index`.
-    @available(*, deprecated, renamed: "~")
     @inlinable
-    func off(_ index: Int) -> IntRange {
-        self..<self+index
-    }
+    func off(_ index: Int) -> IntRange { self..<self+index }
     
     /// Custom infix operator `~` to create a range between two integers.
     ///

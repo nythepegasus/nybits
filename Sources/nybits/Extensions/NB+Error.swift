@@ -55,11 +55,15 @@ public extension Error? where Self == (any Error)? {
     ///   - rhs: The optional `Error` being checked.
     /// - Returns: The optional `Error` to allow further chaining if needed.
     @discardableResult
+    static func <~| (lhs: @escaping @autoclosure (() -> Void), rhs: Error?) -> Error? {
+        if !rhs.isNil { lhs() }
+        return rhs
+    }
     static func <~| (lhs: @escaping (() -> Void), rhs: Error?) -> Error? {
         if !rhs.isNil { lhs() }
         return rhs
     }
-    
+
     /// Executes a closure if the optional `Error` is non-`nil`, passing the `Error` to the closure.
     ///
     /// This operator allows you to execute a closure that takes an `Error` as a parameter if the error exists.
@@ -93,10 +97,13 @@ public extension Error? where Self == (any Error)? {
     /// - Parameters:
     ///   - lhs: The optional `Error` being checked.
     ///   - rhs: The closure to execute if the `Error` is `nil`.
+    static func |~> (lhs: Error?, rhs: @escaping @autoclosure (() -> Void)) {
+        if lhs.isNil { rhs() }
+    }
     static func |~> (lhs: Error?, rhs: @escaping (() -> Void)) {
         if lhs.isNil { rhs() }
     }
-    
+
     /// Executes a closure if the optional `Error` is non-`nil`, passing the `Error` to the closure.
     ///
     /// This operator allows you to execute a closure that takes an `Error` as a parameter if the error exists.
@@ -119,17 +126,24 @@ public extension Error? where Self == (any Error)? {
 
 public extension Error where Self == (any Error) {
     @discardableResult
+    static func <~| (lhs: @escaping @autoclosure (() -> Void), rhs: Error) -> Error {
+        lhs()
+        return rhs
+    }
     static func <~| (lhs: @escaping (() -> Void), rhs: Error) -> Error {
         lhs()
         return rhs
     }
-    
+
     @discardableResult
     static func <~| (lhs: @escaping ((Error) -> Void), rhs: Error) -> Error {
         lhs(rhs)
         return rhs
     }
     
+    static func |~> (lhs: Error, rhs: @escaping @autoclosure (() -> Void)) {
+        rhs()
+    }
     static func |~> (lhs: Error, rhs: @escaping (() -> Void)) {
         rhs()
     }

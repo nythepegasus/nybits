@@ -54,7 +54,7 @@ public extension Foundation.Data {
     @_specialize(where T == UInt32)
     @_specialize(where T == UInt64)
     func array<T>(endian: Endian = .little, in range: IntRange? = nil) -> [T] where T: FixedWidthInteger {
-        let range = range ?? self.startIndex..<self.endIndex
+        let range = range ?? _s..<endIndex
         let size = MemoryLayout<T>.size
         let count = range.count / size
         let value = withUnsafeBytes { buffer in
@@ -80,17 +80,59 @@ public extension Foundation.Data {
     @_specialize(where T == UInt64)
     func padded<T>(endian: Endian = .little, in range: IntRange? = nil) -> [T] where T: FixedWidthInteger {
         let size = MemoryLayout<T>.size
-        let range = range ?? self.startIndex..<self.endIndex
+        let range = range ?? _s..<_e
         var paddedData = self[range]
         if paddedData.count % size != 0 {
             paddedData.append(contentsOf: [UInt8](repeating: 0, count: size - (paddedData.count % size)))
         }
         return paddedData.array(endian: endian, in: range)
     }
+    
+    func get<T>(at i: Int) -> T where T: FixedWidthInteger {
+        T(littleEndianBytes: self[i..<i+MemoryLayout<T>.size])
+    }
+    
+    func get<T>(at i: inout Int) -> T where T: FixedWidthInteger {
+        defer { i += T.bitWidth }
+        let i = i.clamped(_s, _e - MemoryLayout<T>.size)
+        return self.get(at: i)
+    }
+
+    mutating func set<T>(_ value: T, at i: Int) where T: FixedWidthInteger {
+        var v = value
+        let i = i.clamped(_s, _e - MemoryLayout<T>.size)
+        Swift.withUnsafeBytes(of: &v) { b in
+            replaceSubrange(i..<i+MemoryLayout<T>.size, with: b)
+        }
+    }
+    
+    mutating func set<T>(_ value: T, at i: inout Int) where T: FixedWidthInteger {
+        self.set(value, at: i)
+        i += T.bitWidth
+    }
+    
+    
+    mutating func setu8( _ value: UInt8,  at index: Int) { set(value, at: index) }
+    mutating func setu16(_ value: UInt16, at index: Int) { set(value, at: index) }
+    mutating func setu32(_ value: UInt32, at index: Int) { set(value, at: index) }
+    mutating func setu64(_ value: UInt64, at index: Int) { set(value, at: index) }
+    
+    mutating func seti8( _ value: Int8,  at index: Int) { set(value, at: index) }
+    mutating func seti16(_ value: Int16, at index: Int) { set(value, at: index) }
+    mutating func seti32(_ value: Int32, at index: Int) { set(value, at: index) }
+    mutating func seti64(_ value: Int64, at index: Int) { set(value, at: index) }
 }
 
 
 // MARK: Data Unsigned and Signed Integer Type extensions
+
+extension Foundation.Data {
+    @inlinable
+    var _s: Int { startIndex }
+    
+    @inlinable
+    var _e: Int { endIndex }
+}
 
 public extension Foundation.Data {
     
@@ -101,28 +143,28 @@ public extension Foundation.Data {
     /// - Parameter index: The index of the byte in the data.
     /// - Returns: The byte (`UInt8`) at the specified index.
     @inlinable
-    func byte(_ index: Int) -> UInt8 { subdata(in: index.byte).uint8 }
+    func byte(_ index: Int) -> UInt8 { get(at: index) }
     
     /// Returns the word at the specified index.
     ///
     /// - Parameter index: The index of the word in the data.
     /// - Returns: The word (`UInt16`) at the specified index.
     @inlinable
-    func word(_ index: Int) -> UInt16 { subdata(in: index.word).uint16 }
+    func word(_ index: Int) -> UInt16 { get(at: index) }
     
     /// Returns the full word at the specified index.
     ///
     /// - Parameter index: The index of the full word in the data.
     /// - Returns: The full word (`UInt32`) at the specified index.
     @inlinable
-    func fword(_ index: Int) -> UInt32 { subdata(in: index.fword).uint32 }
+    func fword(_ index: Int) -> UInt32 { get(at: index) }
     
     /// Returns the double full word at the specified index.
     ///
     /// - Parameter index: The index of the double full word in the data.
     /// - Returns: The double full word (`UInt64`) at the specified index.
     @inlinable
-    func dfword(_ index: Int) -> UInt64 { subdata(in: index.dfword).uint64 }
+    func dfword(_ index: Int) -> UInt64 { get(at: index) }
     
     // MARK: - Signed Integer Accessors
     
@@ -131,28 +173,28 @@ public extension Foundation.Data {
     /// - Parameter index: The index of the signed byte in the data.
     /// - Returns: The signed byte (`Int8`) at the specified index.
     @inlinable
-    func sbyte(_ index: Int) -> Int8 { subdata(in: index.byte).int8 }
+    func sbyte(_ index: Int) -> Int8 { get(at: index) }
     
     /// Returns the signed word at the specified index.
     ///
     /// - Parameter index: The index of the signed word in the data.
     /// - Returns: The signed word (`Int16`) at the specified index.
     @inlinable
-    func sword(_ index: Int) -> Int16 { subdata(in: index.word).int16 }
+    func sword(_ index: Int) -> Int16 { get(at: index) }
     
     /// Returns the signed full word at the specified index.
     ///
     /// - Parameter index: The index of the signed full word in the data.
     /// - Returns: The signed full word (`Int32`) at the specified index.
     @inlinable
-    func sfword(_ index: Int) -> Int32 { subdata(in: index.fword).int32 }
+    func sfword(_ index: Int) -> Int32 { get(at: index) }
     
     /// Returns the signed double full word at the specified index.
     ///
     /// - Parameter index: The index of the signed double full word in the data.
     /// - Returns: The signed double full word (`Int64`) at the specified index.
     @inlinable
-    func sdfword(_ index: Int) -> Int64 { subdata(in: index.dfword).int64 }
+    func sdfword(_ index: Int) -> Int64 { get(at: index) }
     
     // MARK: - Bitwise Operations
     
@@ -181,7 +223,7 @@ public extension Foundation.Data {
     
     /// The `UInt8` value at the start of the data.
     @inlinable
-    var uint8: UInt8 { to() }
+    var uint8: UInt8 { byte(_s) }
     
     /// An array of `UInt8` values representing the data.
     @inlinable
@@ -193,7 +235,7 @@ public extension Foundation.Data {
     
     /// The `UInt16` value at the start of the data.
     @inlinable
-    var uint16: UInt16 { to() }
+    var uint16: UInt16 { word(_s) }
     
     /// An array of `UInt16` values representing the data.
     @inlinable
@@ -205,7 +247,7 @@ public extension Foundation.Data {
     
     /// The `UInt32` value at the start of the data.
     @inlinable
-    var uint32: UInt32 { to() }
+    var uint32: UInt32 { fword(_s) }
     
     /// An array of `UInt32` values representing the data.
     @inlinable
@@ -217,7 +259,7 @@ public extension Foundation.Data {
     
     /// The `UInt64` value at the start of the data.
     @inlinable
-    var uint64: UInt64 { to() }
+    var uint64: UInt64 { dfword(_s) }
     
     /// An array of `UInt64` values representing the data.
     @inlinable
@@ -231,7 +273,7 @@ public extension Foundation.Data {
     
     /// The `Int8` value at the start of the data.
     @inlinable
-    var int8: Int8 { to() }
+    var int8: Int8 { sbyte(_s) }
     
     /// An array of `Int8` values representing the data.
     @inlinable
@@ -243,7 +285,7 @@ public extension Foundation.Data {
     
     /// The `Int16` value at the start of the data.
     @inlinable
-    var int16: Int16 { to() }
+    var int16: Int16 { sword(_s) }
     
     /// An array of `Int16` values representing the data.
     @inlinable
@@ -255,7 +297,7 @@ public extension Foundation.Data {
     
     /// The `Int32` value at the start of the data.
     @inlinable
-    var int32: Int32 { to() }
+    var int32: Int32 { sfword(_s) }
     
     /// An array of `Int32` values representing the data.
     @inlinable
@@ -267,7 +309,7 @@ public extension Foundation.Data {
     
     /// The `Int64` value at the start of the data.
     @inlinable
-    var int64: Int64 { to() }
+    var int64: Int64 { sdfword(_s) }
     
     /// An array of `Int64` values representing the data.
     @inlinable
