@@ -7,6 +7,14 @@
 
 import Foundation
 
+public typealias ErrorHandler<T> = (Error, T) -> Void
+
+public protocol HasErrorHandler<T> {
+    associatedtype T
+    
+    static func handleError(_ error: Error, _ data: T)
+}
+
 // MARK: - Custom Infix Operators
 
 /// A custom infix operator for chaining success or error handling, using `NilCoalescingPrecedence`.
