@@ -7,13 +7,49 @@
 
 import Foundation
 
-public typealias ErrorHandler<T> = (Error, T) -> Void
+public typealias ErrorLogger<T> = (Error, T?) -> Void
+public typealias ThrowingErrorLogger<T> = (Error, T?) throws -> Void
 
-public protocol HasErrorHandler<T> {
+public protocol HasErrorLogger<T> {
     associatedtype T
     
-    static func handleError(_ error: Error, _ data: T)
+    static func handleError(_ error: Error, _ data: T?)
 }
+
+public protocol HasThrowingErrorLogger<T> {
+    associatedtype T
+    
+    static func handleError(_ error: Error, _ data: T?) throws
+}
+
+public protocol NYErrorLogger: HasErrorLogger & HasThrowingErrorLogger {}
+
+public typealias ErrorHandler = (Error) -> Void
+public typealias ThrowingErrorHandler = (Error) throws -> Void
+
+public protocol HasErrorHandler {
+    static func handleError(_ error: Error)
+}
+
+public protocol HasThrowingErrorHandler {
+    static func handleError(_ error: Error) throws
+}
+
+public protocol NYErrorHandler: HasErrorHandler & HasThrowingErrorHandler {}
+
+public typealias EmptyErrorHandler = () -> Void
+public typealias ThrowingEmptyErrorHandler = () throws -> Void
+
+public protocol HasEmptyErrorHandler {
+    static func handleError()
+}
+
+public protocol HasThrowingEmptyErrorHandler {
+    static func handleError() throws
+}
+
+public protocol NYEmptyErrorHandler: HasEmptyErrorHandler & HasThrowingEmptyErrorHandler {}
+
 
 // MARK: - Custom Infix Operators
 
