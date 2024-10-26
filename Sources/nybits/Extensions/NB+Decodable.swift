@@ -100,9 +100,6 @@ public extension Decodable where Self: HasErrorLogger<Data> {
         } catch { errorHandler(error, json) }
         self = try JSONDecoder().decode(Self.self, from: json)
     }
-    
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.handleError) }
-    // explicit init with handler to ensure it exists/compiles
 }
 
 public extension Decodable where Self: HasThrowingErrorLogger<Data> {
@@ -112,8 +109,6 @@ public extension Decodable where Self: HasThrowingErrorLogger<Data> {
         } catch { try errorHandler(error, json) }
         self = try! JSONDecoder().decode(Self.self, from: json)
     }
-
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.handleError) }
 }
 
 public extension Decodable where Self: HasErrorHandler {
@@ -123,8 +118,6 @@ public extension Decodable where Self: HasErrorHandler {
         } catch { errorHandler(error) }
         self = try JSONDecoder().decode(Self.self, from: json)
     }
-    
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.handleError) }
 }
 
 public extension Decodable where Self: HasThrowingErrorHandler {
@@ -134,9 +127,6 @@ public extension Decodable where Self: HasThrowingErrorHandler {
         } catch { try errorHandler(error) }
         self = try! JSONDecoder().decode(Self.self, from: json)
     }
-
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.handleError) }
-
 }
 
 public extension Decodable where Self: HasEmptyErrorHandler {
@@ -146,8 +136,6 @@ public extension Decodable where Self: HasEmptyErrorHandler {
         } catch { errorHandler() }
         self = try JSONDecoder().decode(Self.self, from: json)
     }
-    
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.handleError) }
 }
 
 public extension Decodable where Self: HasThrowingEmptyErrorHandler {
@@ -157,6 +145,4 @@ public extension Decodable where Self: HasThrowingEmptyErrorHandler {
         } catch { try errorHandler() }
         self = try! JSONDecoder().decode(Self.self, from: json)
     }
-
-    init?(json: Data) throws { try self.init(json: json, errorHandler: Self.HandleError) }
 }
