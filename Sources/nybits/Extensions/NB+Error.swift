@@ -26,10 +26,7 @@ public protocol NYErrorLogger: HasErrorLogger & HasThrowingErrorLogger {}
 
 public extension NYErrorLogger {
     @inlinable
-    static func handleError(_ error: any Error, _ data: LoggedType?) {}
-    
-    @inlinable
-    static func handleError(error: any Error, _ data: LoggedType?) throws {}
+    static func handleError(error: any Error, _ data: LoggedType?) throws { handleError(error, data) }
 }
 
 public typealias ErrorHandler = (Error) -> Void
@@ -45,12 +42,9 @@ public protocol HasThrowingErrorHandler {
 
 public protocol NYErrorHandler: HasErrorHandler & HasThrowingErrorHandler {}
 
-public extension NYErrorHandler {
+public extension NYErrorHandler {    
     @inlinable
-    static func handleError(_ error: any Error) {}
-    
-    @inlinable
-    static func handleError(error: any Error) throws {}
+    static func handleError(error: any Error) throws { handleError(error) }
 }
 
 public typealias EmptyErrorHandler = () -> Void
@@ -67,9 +61,7 @@ public protocol HasThrowingEmptyErrorHandler {
 public protocol NYEmptyErrorHandler: HasEmptyErrorHandler & HasThrowingEmptyErrorHandler {}
 
 public extension NYEmptyErrorHandler {
-    static func handleError() {}
-    
-    static func HandleError() throws {}
+    static func HandleError() throws { handleError() }
 }
 
 // MARK: - Custom Infix Operators
