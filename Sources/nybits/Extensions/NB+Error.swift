@@ -19,10 +19,18 @@ public protocol HasErrorLogger<T> {
 public protocol HasThrowingErrorLogger<T> {
     associatedtype T
     
-    static func handleError(_ error: Error, _ data: T?) throws
+    static func handleError(error: Error, _ data: T?) throws
 }
 
 public protocol NYErrorLogger: HasErrorLogger & HasThrowingErrorLogger {}
+
+public extension NYErrorLogger {
+    @inlinable
+    static func handleError(_ error: any Error, _ data: T?) {}
+    
+    @inlinable
+    static func handleError(error: any Error, _ data: T?) throws {}
+}
 
 public typealias ErrorHandler = (Error) -> Void
 public typealias ThrowingErrorHandler = (Error) throws -> Void
@@ -32,10 +40,18 @@ public protocol HasErrorHandler {
 }
 
 public protocol HasThrowingErrorHandler {
-    static func handleError(_ error: Error) throws
+    static func handleError(error: Error) throws
 }
 
 public protocol NYErrorHandler: HasErrorHandler & HasThrowingErrorHandler {}
+
+public extension NYErrorHandler {
+    @inlinable
+    static func handleError(_ error: any Error) {}
+    
+    @inlinable
+    static func handleError(error: any Error) throws {}
+}
 
 public typealias EmptyErrorHandler = () -> Void
 public typealias ThrowingEmptyErrorHandler = () throws -> Void
@@ -45,11 +61,16 @@ public protocol HasEmptyErrorHandler {
 }
 
 public protocol HasThrowingEmptyErrorHandler {
-    static func handleError() throws
+    static func HandleError() throws
 }
 
 public protocol NYEmptyErrorHandler: HasEmptyErrorHandler & HasThrowingEmptyErrorHandler {}
 
+public extension NYEmptyErrorHandler {
+    static func handleError() {}
+    
+    static func HandleError() throws {}
+}
 
 // MARK: - Custom Infix Operators
 
