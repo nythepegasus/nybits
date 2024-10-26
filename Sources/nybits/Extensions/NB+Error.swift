@@ -7,29 +7,29 @@
 
 import Foundation
 
-public typealias ErrorLogger<T> = (Error, T?) -> Void
-public typealias ThrowingErrorLogger<T> = (Error, T?) throws -> Void
+public typealias ErrorLogger<LoggedType> = (Error, LoggedType?) -> Void
+public typealias ThrowingErrorLogger<LoggedType> = (Error, LoggedType?) throws -> Void
 
-public protocol HasErrorLogger<T> {
-    associatedtype T
+public protocol HasErrorLogger<LoggedType> {
+    associatedtype LoggedType
     
-    static func handleError(_ error: Error, _ data: T?)
+    static func handleError(_ error: Error, _ data: LoggedType?)
 }
 
-public protocol HasThrowingErrorLogger<T> {
-    associatedtype T
+public protocol HasThrowingErrorLogger<LoggedType> {
+    associatedtype LoggedType
     
-    static func handleError(error: Error, _ data: T?) throws
+    static func handleError(error: Error, _ data: LoggedType?) throws
 }
 
 public protocol NYErrorLogger: HasErrorLogger & HasThrowingErrorLogger {}
 
 public extension NYErrorLogger {
     @inlinable
-    static func handleError(_ error: any Error, _ data: T?) {}
+    static func handleError(_ error: any Error, _ data: LoggedType?) {}
     
     @inlinable
-    static func handleError(error: any Error, _ data: T?) throws {}
+    static func handleError(error: any Error, _ data: LoggedType?) throws {}
 }
 
 public typealias ErrorHandler = (Error) -> Void
